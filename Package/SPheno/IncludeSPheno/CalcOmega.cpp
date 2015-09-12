@@ -6,7 +6,7 @@
 using namespace std;
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-/* MAIN PROGRAM (by F.Staub, last change 02.01.2012)			     		    */
+/* MAIN PROGRAM (by F.Staub, last change 04.05.2015)			     		    */
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 int main(int argc, char** argv)
@@ -24,7 +24,6 @@ int main(int argc, char** argv)
 			printMasses(stdout,1);				
 	 		Omega = darkOmega(&Xf,fast,Beps);
 			printf("Xf=%.2e Omega h^2=%.2e\n",Xf,Omega);
-//   			printChannels(Xf,cut,Beps,1,stdout);
 			printf("\n");
 			printChannels(Xf,cut,Beps,1,stdout);
 			FILE *omega = fopen("omg.out","w");

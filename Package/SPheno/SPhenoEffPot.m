@@ -27,7 +27,7 @@ Print["--------------------------------------"];
 *)
 Print[StyleForm["Write two-loop corrections","Section",FontSize->12]];
 
-$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+(* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 (* CreateDirectory[$sarahCurrentSPhenoDir]; *)
 sphenoEP=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"EffectivePotential_"<>ModelName<>".f90"]];
 
@@ -476,7 +476,7 @@ For[i=1,i<=NrVEVs,i++;,
 WriteString[sphenoEP,"ti_ep2L("<>ToString[i]<>") = partialDiff_Ridders(EffPotFunction2Loop,vevs,"<>ToString[i]<>","<>ToString[NrVEVs]<>",err,h_start,iout) \n"];
 WriteString[sphenoEP, "If (err.gt.err2L) err2L = err \n"];
 ];
-(*calculate upper triangle (i,j), j<=i *)
+(*calculate upper triangle (i,j), j\[LessEqual]i *)
 For[i=1,i<=NrVEVs,i++;,
 For[j=1,j<=i,j++;,
 (*WriteString[sphenoEP,"pi_ep("<>ToString[i]<>","<>ToString[j]<>") = partialDiffXY_Ridders(EffPotFunction,vevs,"<>ToString[i]<>","<>ToString[j]<>","<>ToString[NrVEVs]<>",err,h_start,iout) \n"];*)
@@ -595,17 +595,17 @@ WriteString[sphenoEP,"result=result+(+3)*temp ! vectors\n\n"];
 WriteString[sphenoEP,"temp=0._dp\n"];
 WriteString[sphenoEP,"! sum over ghosts (times generations) \n"];
 contr="";
-For[i=1,i<=Length[AllGhosts],i++;,
+For[i=1,i\[LessEqual]Length[AllGhosts],i++;,
 particle=AllGhosts[[i]];
 gen=getGen[particle[[1]]];
 multString=getParticleMultiplicityString[particle];
 If[gen===1,
 contr=multString<>"h_SMartin("<>ToString[SPhenoMassSq[particle[[1]]]]<>",Qscale) ! "<>ToString[particle[[1]]]<>"\n";
-WriteString[sphenoEP,"temp=temp+"<>StringReplace[contr,{"0."->"0._dp"}]];
+WriteString[sphenoEP,"temp=temp+"<>StringReplace[contr,{"0."\[Rule]"0._dp"}]];
 ,
 WriteString[sphenoEP,"Do i=1,"<>ToString[gen]<>"\n"];
 contr=multString<>"h_SMartin("<>ToString[SPhenoMassSq[particle[[1]]]]<>"(i),Qscale) ! "<>ToString[particle[[1]]]<>"\n";
-WriteString[sphenoEP,"temp=temp+"<>StringReplace[contr,{"0."->"0._dp"}]];
+WriteString[sphenoEP,"temp=temp+"<>StringReplace[contr,{"0."\[Rule]"0._dp"}]];
 WriteString[sphenoEP,"End Do\n"];
 ];
 ];
@@ -1726,7 +1726,7 @@ Return[prefactor];
 
 
 WriteVertexToFileWithPrefix[nr_, name_, ind_, type_, file_,vevindex_,prefix_]:=WriteVertexToFileWithPrefix[nr, name, ind, type, file,vevindex,prefix,prefix]; 
-(*if you just give one prefix, it's    prefix coup1L = prefix cplcSdSdhh (..)     *)
+(*if you just give one prefix, it's    prefix coup1L = prefix cplcSdSdhh(..)     *)
 WriteVertexToFileWithPrefix[nr_, name_, ind_, type_, file_,vevindex_,prefix_,prefixcoupling_]:=
   Block[{index},
 If[ind[[1]]===""||ind[[1]]===Null,

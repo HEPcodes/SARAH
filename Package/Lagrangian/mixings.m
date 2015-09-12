@@ -149,6 +149,30 @@ Print["-----------------------------------"];
 PrintAll[StyleForm["Evolve States: "<>ToString[title],"Section",FontSize->12]];
 rgNr++;
 
+
+If[Head[Head[DEFINITION[NameOfStates[[rotNr]]][LagrangianInput]]]=!=DEFINITION,
+DEFINITION[NameOfStates[[rotNr]]][Additional]=DEFINITION[NameOfStates[[rotNr]]][LagrangianInput];
+];
+
+If[Head[Head[DEFINITION[NameOfStates[[rotNr]]][Additional]]]=!=DEFINITION,
+PrintAll["Adding terms to the Lagrangian: "];
+add=DEFINITION[NameOfStates[[rotNr]]][Additional];
+sumLagInput=0;
+For[j=1,j<=Length[add],
+Print[" ... adding: ",add[[j,1]], " (",Dynamic[DynamicStatusAddTerms[ADD]]/. ADD->add[[j,1]],")"];
+
+PrintDebug[" ... adding: ",add[[j,1]]];
+newTerms=CreateLagrangian[add[[j,1]],AddHC /. add[[j,2]] /. {AddHC->False},Overwrite /. add[[j,2]] /. {Overwrite->False}];
+sumLagInput+=newTerms[[1]];
+LagReDef+=newTerms[[1]];
+LagrangianVVV+=newTerms[[2]];
+LagrangianVVVV+=newTerms[[3]];
+Potential-=newTerms[[4]];
+Kinetic +=newTerms[[5]];
+j++;];
+LagInput[NameOfStates[[rotNr]]]=sumLagInput;
+];
+
 If[Head[Head[DEFINITION[NameOfStates[[rotNr]]][VEVs]]]=!=DEFINITION,
 GenerateVEVs[NameOfStates[[rotNr]]];,
 vevSub={};
@@ -172,6 +196,16 @@ LagrangianAux=replaceGen[ReleaseHold[LagrangianAux/.flavorSub],rgNr];
 LagReDef=replaceGen[ReleaseHold[LagReDef/.flavorSub],rgNr];
 flavorSub={};,
 flavorSub={};];
+
+If[Head[Head[DEFINITION[NameOfStates[[rotNr]]][Decompositions]]]=!=DEFINITION,
+DecomposeStates[NameOfStates[[rotNr]]];
+Potential=replaceGen[ReleaseHold[Potential /.decomposeSub],rgNr];
+Kinetic=replaceGen[ReleaseHold[Kinetic/.decomposeSub],rgNr];
+EffectiveOperators=replaceGen[ReleaseHold[EffectiveOperators/.decomposeSub],rgNr];
+LagrangianAux=replaceGen[ReleaseHold[LagrangianAux/.decomposeSub],rgNr];
+LagReDef=replaceGen[ReleaseHold[LagReDef/.decomposeSub],rgNr];
+decomposeSub={};,
+decomposeSub={};];
 
 
 If[Head[Head[DEFINITION[NameOfStates[[rotNr]]][Phases]]]=!=DEFINITION,
@@ -255,6 +289,10 @@ testAutomaticGF2 = replaceGen[ReleaseHold[ReleaseHold[testAutomaticGF/.res[[1]]]
 
 SA`GaugeFixingTerms =  replaceGen[ReleaseHold[ReleaseHold[SA`GaugeFixingTerms/.res[[1]]]],rgNr];
 
+If[Head[newRealStates]===List,
+realVar=Join[realVar,newRealStates];
+];
+
 
 (* -------------------------------- Effective after Particle Mixing ------------------ *)
 
@@ -270,21 +308,21 @@ If[Head[Head[DEFINITION[NameOfStates[[rotNr]]][GaugeFixing]]]=!=DEFINITION,
 CalcGhostLagrangian[DEFINITION[NameOfStates[[rotNr]]][GaugeFixing]];
 ];
 *)
-
+(*
 If[Head[Head[DEFINITION[NameOfStates[[rotNr]]][LagrangianInput]]]=!=DEFINITION,
 DEFINITION[NameOfStates[[rotNr]]][Additional]=DEFINITION[NameOfStates[[rotNr]]][LagrangianInput];
 ];
-
-
+*)
+(*
 If[Head[Head[DEFINITION[NameOfStates[[rotNr]]][Additional]]]=!=DEFINITION,
 PrintAll["Adding terms to the Lagrangian: "];
 add=DEFINITION[NameOfStates[[rotNr]]][Additional];
 sumLagInput=0;
-For[j=1,j<=Length[add],
-Print[" ... adding: ",add[[j,1]], " (",Dynamic[DynamicStatusAddTerms[ADD]]/. ADD->add[[j,1]],")"];
+For[j=1,j\[LessEqual]Length[add],
+Print[" ... adding: ",add[[j,1]], " (",Dynamic[DynamicStatusAddTerms[ADD]]/. ADD\[Rule]add[[j,1]],")"];
 
 PrintDebug[" ... adding: ",add[[j,1]]];
-newTerms=CreateLagrangian[add[[j,1]],AddHC /. add[[j,2]] /. {AddHC->False},Overwrite /. add[[j,2]] /. {Overwrite->False}];
+newTerms=CreateLagrangian[add[[j,1]],AddHC /. add[[j,2]] /. {AddHC\[Rule]False},Overwrite /. add[[j,2]] /. {Overwrite\[Rule]False}];
 sumLagInput+=newTerms[[1]];
 LagReDef+=newTerms[[1]];
 LagrangianVVV+=newTerms[[2]];
@@ -294,7 +332,7 @@ Kinetic +=newTerms[[5]];
 j++;];
 LagInput[NameOfStates[[rotNr]]]=sumLagInput;
 ];
-
+*)
 SaveModelParameters[NameOfStates[[rotNr]]];
 
 rotNr++;
@@ -429,7 +467,7 @@ PrintAll["Problem with deriving global charges for ",mixES[[i,2,1]]];,
 SA`ChargeGlobal[RE[mixES[[i,2,1]]],Global[[i2,2]]] =SA`ChargeGlobal[mixES[[i,1,1]],Global[[i2,2]]];
 ];
 i2++;];
-If[TrueQ[conj[mixES[[i,1,1]]]==mixES[[i,1,1]]]==True,realVar=Join[realVar,{mixES[[i,2,1]]}];];
+If[TrueQ[conj[mixES[[i,1,1]]]==mixES[[i,1,1]]]==True || FreeQ[newRealStates,mixES[[i,1,1]]]==False,realVar=Join[realVar,{mixES[[i,2,1]]}];];
 If[FreeQ[parameters,mixES[[i,2,2]]]==True,
 If[gen<=4,
 SA`subUnitaryCondition = Join[SA`subUnitaryCondition,{Sum[mixES[[i,2,2]][a_,k] conj[mixES[[i,2,2]][b_,k]],{k,1,gen}]-> Delta[a,b]}];
@@ -463,7 +501,7 @@ PrintAll["Problem with deriving global charges for ",mixES[[i,2,1]]];,
 SA`ChargeGlobal[RE[mixES[[i,2,1]]],Global[[i2,2]]] =SA`ChargeGlobal[mixES[[i,1,1]],Global[[i2,2]]];
 ];
 i2++;];
-If[TrueQ[conj[mixESnoFV[[i,1,1]]]==mixESnoFV[[i,1,1]]]==True,realVar=Join[realVar,{mixESnoFV[[i,2,1]]}];];
+If[TrueQ[conj[mixESnoFV[[i,1,1]]]==mixESnoFV[[i,1,1]]]==True || FreeQ[newRealStates,mixESnoFV[[i,1,1]]]==False,realVar=Join[realVar,{mixESnoFV[[i,2,1]]}];];
 If[FreeQ[parameters,mixESnoFV[[i,2,2]]]==True,
 SA`subUnitaryCondition = Join[SA`subUnitaryCondition,{Sum[mixESnoFV[[i,2,2]][c_][a_,k] conj[mixESnoFV[[i,2,2]][c_][b_,k]],{k,1,flavors}]-> Delta[a,b],Delta[c_,d_]Sum[mixESnoFV[[i,2,2]][c_][a_,k] conj[mixESnoFV[[i,2,2]][d_][b_,k]],{k,1,flavors}]-> Delta[a,b] Delta[c,d]}];
 parameters=Join[parameters,{{mixESnoFV[[i,2,2]],{generation,flavor,flavor},{gen,flavors,flavors}}}];
@@ -998,6 +1036,50 @@ FlavorSub[type]=flavorSub;
 FlavorSubInverse[type]=flavorInverse;
 If[IgnoreGaugeFixing=!=True,
 UpdateGaugeTransformations[flavorSub,flavorInverse,UGTflavorMM[rotNr]];
+];
+];
+
+DecomposeStates[type_]:=Block[{i,j,k,decomp},
+PrintAll["Decompose Fields"];
+decomposeSub={};
+decomposeInverse={};
+decomp=DEFINITION[type][Decompositions];
+
+For[i=1,i<=Length[decomp],
+If[getType[decomp[[i,1]]]===F,
+decomposeSub=Join[decomposeSub,{decomp[[i,1]][{y___}][c_]->Sum[decomp[[i,2,n,1]] decomp[[i,2,n,2]][{y}][c] ,{n,1,Length[decomp[[i,2]]]}]}];,
+decomposeSub=Join[decomposeSub,{decomp[[i,1]][{y___}]->Sum[decomp[[i,2,n,1]] decomp[[i,2,n,2]][{y}] ,{n,1,Length[decomp[[i,2]]]}]}];
+];
+
+
+
+For[j=1,j<=Length[decomp[[i,2]]],
+If[FreeQ[Particles[ALL],decomp[[i,2,j,2]]],
+addParticle[decomp[[i,2,j,2]],getIndizesWI[decomp[[i,1]]] /. {generation,x_}->{generation,1},1,getType[decomp[[i,1]]]];
+For[i2=1,i2<=Length[Gauge],
+ If[FreeQ[BrokenSymmetries,i2]==True,
+SA`Casimir[decomp[[i,2,j,2]],i2]=SA`Casimir[decomp[[i,1]],i2];
+SA`Dynkin[decomp[[i,2,j,2]],i2]=SA`Dynkin[decomp[[i,1]],i2];
+SA`DimensionGG[decomp[[i,2,j,2]],i2]=SA`DimensionGG[decomp[[i,1]],i2];
+SA`DynL[decomp[[i,2,j,2]],i2]=SA`DynL[decomp[[i,1]],i2];
+]; 
+i2++ ];
+For[i2=1,i2<=Length[Global],
+SA`ChargeGlobal[RE[decomp[[i,2,j,2]]],Global[[i2,2]]] =SA`ChargeGlobal[decomp[[i,1]],Global[[i2,2]]];
+i2++;];
+If[getType[decomp[[i,1]]]===F,
+decomposeInverse=Join[decomposeInverse,{decomp[[i,2,j,2]][{y___}][c_]->1/decomp[[i,2,j,1]] (decomp[[i,1]][{y}][c]-Sum[If[n!=j,decomp[[i,2,n,1]] decomp[[i,2,n,2]][{y}][c],0] ,{n,1,Length[decomp[[i,2]]]}])}];,
+decomposeInverse=Join[decomposeInverse,{decomp[[i,2,j,2]][{y___}]->1/decomp[[i,2,j,1]](decomp[[i,1]][{y}]-Sum[If[n!=j,decomp[[i,2,n,1]] decomp[[i,2,n,2]][{y}][c],0] ,{n,1,Length[decomp[[i,2]]]}])}];
+];
+If[FreeQ[realVar,decomp[[i,1]]]==False,realVar=Join[realVar,{decomp[[i,2,j,2]]}];];
+];
+j++;];
+delParticle[decomp[[i,1]]];
+i++];
+DecompSub[type]=decompSub;
+DecompSubInverse[type]=decomposeInverse;
+If[IgnoreGaugeFixing=!=True,
+UpdateGaugeTransformations[decomposeSub,decomposeInverse,UGTflavorMM[rotNr]];
 ];
 ];
 

@@ -48,8 +48,8 @@ NameOfStates={GaugeES,EWSB};
 (* ----- Before EWSB ----- *)
 
 DEFINITION[GaugeES][Additional]= {
-	{LagHC, {Overwrite->True, AddHC->True}},
-	{LagNoHC,{Overwrite->True, AddHC->False}}
+	{LagHC, {AddHC->True}},
+	{LagNoHC,{ AddHC->False}}
 };
 
 LagNoHC = -(mu2 conj[H].H  + 1/2 MT trip.trip  - 1/2 LT  Delta[lef1b,lef2] Delta[lef2b,lef3] Delta[lef3b,lef4] Delta[lef4b,lef1] trip.trip.trip.trip \

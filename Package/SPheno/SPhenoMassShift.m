@@ -24,7 +24,7 @@ Print["--------------------------------------"];
 Print["Writing SPheno Shifts for Parameters "];
 Print["--------------------------------------"];
 
-$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+(* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 (* CreateDirectory[$sarahCurrentSPhenoDir]; *)
 sphenoLoop=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"Shifts_"<>ModelName<>".f90"]];
 
@@ -63,7 +63,7 @@ Close[sphenoLoop];
 
 
 MakeShiftsFile:=Block[{i,currentRegime,readRegime},
-$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+(* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 (* CreateDirectory[$sarahCurrentSPhenoDir]; *)
 sphenoLoop=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"Shifts_"<>ModelName<>".f90"]];
 

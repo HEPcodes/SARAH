@@ -373,11 +373,19 @@ subAlways = subAlwaysSave;
 UseCheckMatrixProduct=True;
 
 For[i=1,i<=Length[ITypes],
+If[DONOTSIMPLIFY===True,
+SA`VertexList[ITypes[[i,1]]]=SA`VertexList[temp][ITypes[[i,1]]] /. subAlways;,
 SA`VertexList[ITypes[[i,1]]]=Simplify/@CheckMatrixProduct2[SA`VertexList[temp][ITypes[[i,1]]] /. subAlways];
+];
 i++;];
+If[DONOTSIMPLIFY===True,
+VertexList3=VertexList3/.subAlways;
+VertexList4=VertexList4/. subAlways;
+VertexListNonCC=VertexListNonCC /. subAlways;,
 VertexList3=Simplify/@CheckMatrixProduct2[VertexList3/.subAlways];
 VertexList4=Simplify/@CheckMatrixProduct2[VertexList4/. subAlways];
-VertexListNonCC=Simplify/@CheckMatrixProduct2[VertexListNonCC /. subAlways];,
+VertexListNonCC=Simplify/@CheckMatrixProduct2[VertexListNonCC /. subAlways];
+];,
 
 For[i=1,i<=Length[ITypes],
 SA`VertexList[ITypes[[i,1]]]=SA`VertexList[temp][ITypes[[i,1]]];

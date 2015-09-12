@@ -170,7 +170,11 @@ WriteString[spheno,StringDrop[SPhenoForm[lowScaleIn[[i]]],-2] <>" = " <>SPhenoFo
 i++;];
 
 For[i=1,i<=Length[BoundaryLowScaleInput],
-WriteString[spheno,SPhenoForm[BoundaryLowScaleInput[[i,1]]]<>" = " <>SPhenoForm[BoundaryLowScaleInput[[i,2]]]<>"\n"];
+Switch[Head[BoundaryLowScaleInput[[i,1]]],
+re,WriteString[spheno,SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>" = Complex(Real(" <> SPhenoForm[BoundaryLowScaleInput[[i,2]]]  <>",dp),Aimag("<>SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<> "))\n"];,
+im,WriteString[spheno,SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>" = Complex(Real(" <>SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>",dp),Real("<> SPhenoForm[BoundaryLowScaleInput[[i,2]]]  <> ",dp))\n"];,
+_,WriteString[spheno,SPhenoForm[BoundaryLowScaleInput[[i,1]]]<>" = " <>SPhenoForm[BoundaryLowScaleInput[[i,2]]]<>"\n"];
+];
 i++;];
 
 If[NonSUSYModel=!=True,
@@ -202,7 +206,11 @@ WriteString[spheno,"Call RunSMohdm(Qin,deltaM,g1SM,g2SM,g3SM,YuSM,YdSM,YeSM,vSM)
 If[SPhenoOnlyForHM=!=True,
 WriteString[spheno,"\n ! Setting Boundary conditions \n "];
 For[i=1,i<=Length[BoundaryLowScaleInput],
-WriteString[spheno,SPhenoForm[BoundaryLowScaleInput[[i,1]]]<>" = " <>SPhenoForm[BoundaryLowScaleInput[[i,2]]]<>"\n"];
+Switch[Head[BoundaryLowScaleInput[[i,1]]],
+re,WriteString[spheno,SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>" = Complex(Real(" <> SPhenoForm[BoundaryLowScaleInput[[i,2]]]  <>",dp),Aimag("<>SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<> "))\n"];,
+im,WriteString[spheno,SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>" = Complex(Real(" <>SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>",dp),Real("<> SPhenoForm[BoundaryLowScaleInput[[i,2]]]  <> ",dp))\n"];,
+_,WriteString[spheno,SPhenoForm[BoundaryLowScaleInput[[i,1]]]<>" = " <>SPhenoForm[BoundaryLowScaleInput[[i,2]]]<>"\n"];
+];
 i++;];
 
 ];

@@ -168,7 +168,11 @@ SuffixRegime="";
 
 If[IntermediateScale =!=True,CreateTeXForm;];
 
+If[OutputSeparateSPhenoDir===True,
+$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"<>ModelName}];,
 $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+];
+
 
 If[FileExistsQ[$sarahCurrentSPhenoDir]=!=True,
 CreateDirectory[$sarahCurrentSPhenoDir];

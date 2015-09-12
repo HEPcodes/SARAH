@@ -155,15 +155,24 @@ ParticleDefinitions[GaugeES] = {
                Mass -> LesHouches,
                FeynArtsNr -> 8,
                LHPC -> {2, "purple"},
-                 ElectricCharge -> 0  }},  
-
-      {Rpm,  { PDG -> {403,404},
-               LaTeX -> {"R^-","R^+"},
-               OutputName -> "Rm",
+                 ElectricCharge -> 0  }}, 
+                 
+     {SRum,    {LaTeX -> {"R_u^-","R_u^+"},
+                ElectricCharge -> -1,
+                LHPC -> {2, "yellow"}, 
+                FeynArtsNr -> 9,
+                PDG -> {403},
+                Mass -> LesHouches,
+                OutputName -> "Rm"}},
+       
+                 
+     {SRdp,    {LaTeX -> {"R_d^+","R_d^-"},
+               ElectricCharge -> 1,
+               LHPC -> {2, "yellow"}, 
+               FeynArtsNr -> 10,
+               PDG -> {404},
                Mass -> LesHouches,
-               FeynArtsNr -> 9,
-               LHPC -> {2, "yellow"},
-                 ElectricCharge -> -1  }}
+                OutputName -> "Rp"}}       
                   
 };                                                                                                                
         

@@ -114,11 +114,11 @@ WriteString[sphenoSugra, "Logical, save :: ThresholdMassesCalculated = .False.\n
 ];
 
 
-For[i=1,i\[LessEqual]Length[ListAllInputParameters],
+For[i=1,i<=Length[ListAllInputParameters],
 WriteString[sphenoSugra, "Logical, save :: InputValuefor"<>SPhenoForm[ListAllInputParameters[[i,1]]]  <>" =.False. \n"];
 i++;];
 
-For[i=1,i\[LessEqual]Length[listParametersOtherRegimes],
+For[i=1,i<=Length[listParametersOtherRegimes],
 WriteString[sphenoSugra, "Logical, save :: InputValuefor"<>SPhenoForm[listParametersOtherRegimes[[i]]]  <>" =.False. \n"];
 i++;];
 *)
@@ -530,7 +530,11 @@ WriteString[sphenoSugra,"Else \n"];
 ];
 If[BoundaryHighScale[[i,2]]=!= RUNNING,
 If[FreeQ[BoundaryHighScale[[i,2]],DIAGONAL]==True,
-WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[i,1]]]<>" = " <> SPhenoForm[BoundaryHighScale[[i,2]]]<>"\n"];,
+Switch[Head[BoundaryHighScale[[i,1]]],
+re,WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[i,1,1]]]<>" = Complex(Real(" <> SPhenoForm[BoundaryHighScale[[i,2]]]  <>",dp),Aimag("<>SPhenoForm[BoundaryHighScale[[i,1,1]]]<> "))\n"];,
+im,WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[i,1,1]]]<>" = Complex(Real(" <>SPhenoForm[BoundaryHighScale[[i,1,1]]]<>",dp),Real("<> SPhenoForm[BoundaryHighScale[[i,2]]]  <> ",dp))\n"];,
+_,WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[i,1]]]<>" = " <> SPhenoForm[BoundaryHighScale[[i,2]]]<>"\n"];
+];,
 WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[i,1]]]<>" = 0._dp \n"];
 WriteString[sphenoSugra,"Do i1=1,"<>ToString[getDimSPheno[BoundaryHighScale[[i,1]]][[1]]]<>"\n"];
 WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[i,1]]]<>"(i1,i1) = " <> SPhenoForm[BoundaryHighScale[[i,2]] /. DIAGONAL->1]<>"\n"];
@@ -554,7 +558,11 @@ WriteString[sphenoSugra,"Else \n"]
 ];
 If[BoundaryHighScale[[j,i,2]]=!= RUNNING,
 If[FreeQ[BoundaryHighScale[[j,i,2]],DIAGONAL]==True,
-WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[j,i,1]]]<>" = " <> SPhenoForm[BoundaryHighScale[[j,i,2]]]<>"\n"];,
+Switch[Head[BoundaryHighScale[[j,i,1]]],
+re,WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[j,i,1,1]]]<>" = Complex(Real(" <> SPhenoForm[BoundaryHighScale[[j,i,2]]]  <>",dp),Aimag("<>SPhenoForm[BoundaryHighScale[[j,i,1,1]]]<> "))\n"];,
+im,WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[j,i,1,1]]]<>" = Complex(Real(" <>SPhenoForm[BoundaryHighScale[[j,i,1,1]]]<>",dp),Real("<> SPhenoForm[BoundaryHighScale[[j,i,2]]]  <> ",dp))\n"];,
+_,WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[j,i,1]]]<>" = " <> SPhenoForm[BoundaryHighScale[[j,i,2]]]<>"\n"];
+];,
 WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[j,i,1]]]<>" = 0._dp \n"];
 WriteString[sphenoSugra,"Do i1=1,"<>ToString[getDimSPheno[BoundaryHighScale[[j,i,1]]][[1]]]<>"\n"];
 WriteString[sphenoSugra,SPhenoForm[BoundaryHighScale[[j,i,1]]]<>"(i1,i1) = " <> SPhenoForm[BoundaryHighScale[[j,i,2]] /. DIAGONAL->1]<>"\n"];
@@ -588,7 +596,11 @@ WriteString[sphenoSugra,StringDrop[SPhenoForm[lowScaleIn[[i]]],-2] <>" = " <>SPh
 i++;];
 
 For[i=1,i<=Length[BoundaryLowScaleInput],
-WriteString[sphenoSugra,SPhenoForm[BoundaryLowScaleInput[[i,1]]]<>" = " <>SPhenoForm[BoundaryLowScaleInput[[i,2]]]<>"\n"];
+Switch[Head[BoundaryLowScaleInput[[i,1]]],
+re,WriteString[sphenoSugra,SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>" = Complex(Real(" <> SPhenoForm[BoundaryLowScaleInput[[i,2]]]  <>",dp),Aimag("<>SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<> "))\n"];,
+im,WriteString[sphenoSugra,SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>" = Complex(Real(" <>SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>",dp),Real("<> SPhenoForm[BoundaryLowScaleInput[[i,2]]]  <> ",dp))\n"];,
+_,WriteString[sphenoSugra,SPhenoForm[BoundaryLowScaleInput[[i,1]]]<>" = " <>SPhenoForm[BoundaryLowScaleInput[[i,2]]]<>"\n"];
+];
 i++;];
 WriteString[sphenoSugra,"End if\n \n "];
 
@@ -1102,13 +1114,21 @@ WriteBoundaryConditionsEWSB[file_]:=Block[{i,j},
 WriteString[file,"\n \n ! --- Boundary conditions at EW-scale --- \n"];
 If[SeveralBoundaryConditions===False,
 For[i=1,i<=Length[BoundaryEWSBScale],
-WriteString[file,SPhenoForm[BoundaryEWSBScale[[i,1]]]<>" = " <> SPhenoForm[BoundaryEWSBScale[[i,2]]]  <> "\n"];
+Switch[Head[BoundaryEWSBScale[[i,1]]],
+re,WriteString[file,SPhenoForm[BoundaryEWSBScale[[i,1,1]]]<>" = Complex(Real(" <> SPhenoForm[BoundaryEWSBScale[[i,2]]]  <>",dp),Aimag("<>SPhenoForm[BoundaryEWSBScale[[i,1,1]]]<> "))\n"];,
+im,WriteString[file,SPhenoForm[BoundaryEWSBScale[[i,1,1]]]<>" = Complex(Real(" <>SPhenoForm[BoundaryEWSBScale[[i,1,1]]]<>",dp),Real("<> SPhenoForm[BoundaryEWSBScale[[i,2]]]  <> ",dp))\n"];,
+_,WriteString[file,SPhenoForm[BoundaryEWSBScale[[i,1]]]<>" = " <> SPhenoForm[BoundaryEWSBScale[[i,2]]]  <> "\n"];
+];
 i++;];,
 WriteString[file,"Select Case(BoundaryCondition) \n"];
 For[j=1,j<=Length[BoundaryEWSBScale],
 WriteString[file,"Case ("<>ToString[j]<>") \n"];
 For[i=1,i<=Length[BoundaryEWSBScale[[j]]],
-WriteString[file,SPhenoForm[BoundaryEWSBScale[[j,i,1]]]<>" = " <> SPhenoForm[BoundaryEWSBScale[[j,i,2]]]  <> "\n"];
+Switch[Head[BoundaryEWSBScale[[j,i,1]]],
+re,WriteString[file,SPhenoForm[BoundaryEWSBScale[[j,i,1,1]]]<>" = Complex(Real(" <> SPhenoForm[BoundaryEWSBScale[[j,i,2]]]  <>",dp),Aimag("<>SPhenoForm[BoundaryEWSBScale[[j,i,1,1]]]<> "))\n"];,
+im,WriteString[file,SPhenoForm[BoundaryEWSBScale[[j,i,1,1]]]<>" = Complex(Real(" <>SPhenoForm[BoundaryEWSBScale[[j,i,1,1]]]<>",dp),Real("<> SPhenoForm[BoundaryEWSBScale[[j,i,2]]]  <> ",dp))\n"];,
+_,WriteString[file,SPhenoForm[BoundaryEWSBScale[[j,i,1]]]<>" = " <> SPhenoForm[BoundaryEWSBScale[[j,i,2]]]  <> "\n"];
+];
 i++;];
 j++;];
 WriteString[file,"End Select \n\n"];
@@ -1123,7 +1143,11 @@ If[SeveralBoundaryConditions==False,
 For[i=1,i<=Length[BoundarySUSYScale],
 If[(BoundarySUSYScale[[i,2]]=!= RUNNING) &&  (BoundarySUSYScale[[i,2]]=!= TADPOLES),
 If[FreeQ[BoundarySUSYScale[[i,2]],DIAGONAL]==True,
-WriteString[file,SPhenoForm[BoundarySUSYScale[[i,1]]]<>" = " <> SPhenoForm[BoundarySUSYScale[[i,2]]]<>"\n"];,
+Switch[Head[BoundarySUSYScale[[i,1]]],
+re,WriteString[file,SPhenoForm[BoundarySUSYScale[[i,1,1]]]<>" = Complex(Real(" <> SPhenoForm[BoundarySUSYScale[[i,2]]]  <>",dp),Aimag("<>SPhenoForm[BoundarySUSYScale[[i,1,1]]]<> "))\n"];,
+im,WriteString[file,SPhenoForm[BoundarySUSYScale[[i,1,1]]]<>" = Complex(Real(" <>SPhenoForm[BoundarySUSYScale[[i,1,1]]]<>",dp),Real("<> SPhenoForm[BoundarySUSYScale[[i,2]]]  <> ",dp))\n"];,
+_,WriteString[file,SPhenoForm[BoundarySUSYScale[[i,1]]]<>" = " <> SPhenoForm[BoundarySUSYScale[[i,2]]]<>"\n"];
+];,
 WriteString[file,"Do i1=1,"<>ToString[getDimSPheno[BoundarySUSYScale[[i,1]]][[1]]]<>"\n"];
 WriteString[file,SPhenoForm[BoundarySUSYScale[[i,1]]]<>"(i1,i1) = " <> SPhenoForm[BoundarySUSYScale[[i,2]] /. DIAGONAL->1]<>"\n"];
 WriteString[file,"End Do\n"];
@@ -1137,7 +1161,11 @@ WriteString[file,"Case ("<>ToString[j]<>") \n"];
 For[i=1,i<=Length[BoundarySUSYScale[[j]]],
 If[(BoundarySUSYScale[[j,i,2]]=!= RUNNING) &&  (BoundarySUSYScale[[j,i,2]]=!= TADPOLES),
 If[FreeQ[BoundarySUSYScale[[j,i,2]],DIAGONAL]==True,
-WriteString[file,SPhenoForm[BoundarySUSYScale[[j,i,1]]]<>" = " <> SPhenoForm[BoundarySUSYScale[[j,i,2]]]<>"\n"];,
+Switch[Head[BoundarySUSYScale[[j,i,1]]],
+re,WriteString[file,SPhenoForm[BoundarySUSYScale[[j,i,1,1]]]<>" = Complex(Real(" <> SPhenoForm[BoundarySUSYScale[[j,i,2]]]  <>",dp),Aimag("<>SPhenoForm[BoundarySUSYScale[[j,i,1,1]]]<> "))\n"];,
+im,WriteString[file,SPhenoForm[BoundarySUSYScale[[j,i,1,1]]]<>" = Complex(Real(" <>SPhenoForm[BoundarySUSYScale[[j,i,1,1]]]<>",dp),Real("<> SPhenoForm[BoundarySUSYScale[[j,i,2]]]  <> ",dp))\n"];,
+_,WriteString[file,SPhenoForm[BoundarySUSYScale[[j,i,1]]]<>" = " <> SPhenoForm[BoundarySUSYScale[[j,i,2]]]<>"\n"];
+];,
 WriteString[file,"Do i1=1,"<>ToString[getDimSPheno[BoundarySUSYScale[[j,i,1]]][[1]]]<>"\n"];
 WriteString[file,SPhenoForm[BoundarySUSYScale[[j,i,1]]]<>"(i1,i1) = " <> SPhenoForm[BoundarySUSYScale[[j,i,2]] /. DIAGONAL->1]<>"\n"];
 WriteString[file,"End Do\n"];
@@ -1168,7 +1196,11 @@ WriteString[sphenoSugra,StringDrop[SPhenoForm[lowScaleIn[[i]]],-2] <>" = " <>SPh
 i++;];
 
 For[i=1,i<=Length[BoundaryLowScaleInput],
-WriteString[sphenoSugra,SPhenoForm[BoundaryLowScaleInput[[i,1]]]<>" = " <>SPhenoForm[BoundaryLowScaleInput[[i,2]]]<>"\n"];
+Switch[Head[BoundaryLowScaleInput[[i,1]]],
+re,WriteString[file,SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>" = Complex(Real(" <> SPhenoForm[BoundaryLowScaleInput[[i,2]]]  <>",dp),Aimag("<>SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<> "))\n"];,
+im,WriteString[file,SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>" = Complex(Real(" <>SPhenoForm[BoundaryLowScaleInput[[i,1,1]]]<>",dp),Real("<> SPhenoForm[BoundaryLowScaleInput[[i,2]]]  <> ",dp))\n"];,
+_,WriteString[sphenoSugra,SPhenoForm[BoundaryLowScaleInput[[i,1]]]<>" = " <>SPhenoForm[BoundaryLowScaleInput[[i,2]]]<>"\n"];
+];
 i++;];
 WriteString[sphenoSugra,"End if\n \n "];
 
@@ -1187,23 +1219,23 @@ i++;];
 (*
 WriteString[sphenoSugra,"If (HighScaleModel.Eq.\"LOW\") Then \n "];
 WriteString[sphenoSugra,"! Setting values \n "];
-For[i=1,i\[LessEqual]Length[listVEVsIN],
-If[MemberQ[ParametersToSolveTadpoles,listVEVs[[i]]]\[Equal]False && FreeQ[{VEVSM1,VEVSM2,VEVSM},listVEVs[[i]]],
+For[i=1,i<=Length[listVEVsIN],
+If[MemberQ[ParametersToSolveTadpoles,listVEVs[[i]]]==False && FreeQ[{VEVSM1,VEVSM2,VEVSM},listVEVs[[i]]],
 WriteString[sphenoSugra,StringDrop[SPhenoForm[listVEVsIN[[i]]],-2] <>" = " <>SPhenoForm[listVEVsIN[[i]]]<>" \n "];
 ];
 i++;];
-For[i=1,i\[LessEqual]Length[HighScaleList],
-If[MemberQ[ParametersToSolveTadpoles,HighScaleList[[i,2]]]\[Equal]False,
+For[i=1,i<=Length[HighScaleList],
+If[MemberQ[ParametersToSolveTadpoles,HighScaleList[[i,2]]]==False,
 WriteString[sphenoSugra,StringDrop[SPhenoForm[highScaleIn[[i]]],-2] <>" = " <>SPhenoForm[highScaleIn[[i]]]<>" \n "];
 ];
 i++;];
-For[i=1,i\[LessEqual]Length[LowScaleList],
-If[MemberQ[ParametersToSolveTadpoles,LowScaleList[[i,2]]]\[Equal]False&& FreeQ[{leftCoupling,hyperchargeCoupling,strongCoupling,UpYukawa,DownYukawa,ElectronYukawa},LowScaleList[[i,1]]],
+For[i=1,i<=Length[LowScaleList],
+If[MemberQ[ParametersToSolveTadpoles,LowScaleList[[i,2]]]==False&& FreeQ[{leftCoupling,hyperchargeCoupling,strongCoupling,UpYukawa,DownYukawa,ElectronYukawa},LowScaleList[[i,1]]],
 WriteString[sphenoSugra,StringDrop[SPhenoForm[lowScaleIn[[i]]],-2] <>" = " <>SPhenoForm[lowScaleIn[[i]]]<>" \n "];
 ];
 i++;];
 
-For[i=1,i\[LessEqual]Length[BoundaryLowScaleInput],
+For[i=1,i<=Length[BoundaryLowScaleInput],
 WriteString[sphenoSugra,SPhenoForm[BoundaryLowScaleInput[[i,1]]]<>" = " <>SPhenoForm[BoundaryLowScaleInput[[i,2]]]<>"\n"];
 i++;];
 WriteString[sphenoSugra,"End if\n \n "];

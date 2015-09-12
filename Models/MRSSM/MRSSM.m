@@ -110,7 +110,7 @@ DEFINITION[EWSB][MatterSector]=
      {{sigmad, sigmau, sigmaS, sigmaT}, {Ah, ZA}},
      {{SRd0, SRu0}, {Rh, ZHR}},
      {{SHdm,conj[SHup],STm,conj[STp]},{Hpm,ZP}},
-     {{SRum,conj[SRdp]},{Rpm,ZRP}},
+    (* {{SRum,conj[SRdp]},{Rpm,ZRP}}, *)
      {{{fB, fW0,FRd0, FRu0}, {Fs, FT0, FHd0,FHu0}}, {{L01,ZN1}, {L02,ZN2}}},
      {{{FTm, FHdm},{fWp, FRdp}}, {{Lm1,UM1}, {Lp1,UP1}}},
      {{{fWm, FRum}, {FTp, FHup}}, {{Lm2,UM2}, {Lp2,UP2}}},

@@ -2,11 +2,12 @@ ParameterDefinitions = {
 
 {g1,        { Description -> "Hypercharge-Coupling"}},
 {g2,        { Description -> "Left-Coupling"}},
-{g3,        { Description -> "Strong-Coupling"}},    
+{g3,        { Description -> "Strong-Coupling"}},  
+				
 {AlphaS,    {Description -> "Alpha Strong"}},
+
 {Gf,        { Description -> "Fermi's constant"}},
 {aEWinv,    { Description -> "inverse weak coupling constant at mZ"}},
-	
 {e,         { Description -> "electric charge"}}, 
 
 {Yu,        { Description -> "Up-Yukawa-Coupling"   }}, 
@@ -17,6 +18,8 @@ ParameterDefinitions = {
 {T[Yd],     { Description -> "Trilinear-Down-Coupling"}}, 
 {T[Yu],     { Description -> "Trilinear-Up-Coupling"}}, 
 
+{\[Mu],     { Description -> "Mu-parameter"}}, 
+{B[\[Mu]],  { Description -> "Bmu-parameter"}},        
 
 {mq2,       { Description -> "Softbreaking left Squark Mass"}},
 {me2,       { Description -> "Softbreaking right Slepton Mass"}},
@@ -30,47 +33,25 @@ ParameterDefinitions = {
 {MassWB,    { Description -> "Wino Mass parameter"}},
 {MassG,     { Description -> "Gluino Mass parameter"}},
                            
-{vd,        { Description -> "Down-VEV",
-              DependenceNum -> v Cos[ArcTan[TanBeta]]}}, 
-{vu,        { Description -> "Up-VEV",
-              DependenceNum -> v Sin[ArcTan[TanBeta]]}},        
+{vd,        { Description -> "Down-VEV"}}, 
+{vu,        { Description -> "Up-VEV"}},       
 {v,         { Description -> "EW-VEV"}},
-
-{eta,       { Real -> True, 
-              OutputName -> eta,
-              LaTeX -> "\\eta",
-              LesHouches->{HMIX,500} }},
-
-
-{etaS,       { Real -> True, 
-              OutputName -> etaS,
-              LaTeX -> "\\eta_S",
-              LesHouches->{HMIX,501} }},
              
-          
-{TanBeta,   { Description -> "Tan Beta", 
-              OutputName->TanBeta }},                                      
+{\[Beta],   { Description -> "Pseudo Scalar mixing angle"  }},             
+{TanBeta,   { Description -> "Tan Beta" }},              
+{\[Alpha],  { Description -> "Scalar mixing angle" }},                          
              
     
 {ZD,        { Description -> "Down-Squark-Mixing-Matrix" }},             
 {ZU,        { Description -> "Up-Squark-Mixing-Matrix"}},             
 {ZE,        { Description -> "Slepton-Mixing-Matrix"}}, 
 {ZV,        { Description->"Sneutrino Mixing-Matrix"}},   
-{ZH,        { Description->"Scalar-Mixing-Matrix", 
-              Real -> True, 
-              Dependence -> None,
-              DependenceOptional -> None,
-              DependenceNum -> None           }},
-{ZP,        { Description->"Charged-Mixing-Matrix",
-              Real -> False,
-              Dependence -> None,
-              DependenceOptional -> None,
-              DependenceNum -> None}},                      
+{ZH,        { Description->"Scalar-Mixing-Matrix"}},
+{ZA,        { Description->"Pseudo-Scalar-Mixing-Matrix"}},
+{ZP,        { Description->"Charged-Mixing-Matrix"}},                      
                                           
  
-{ZN,        { Description->"Neutralino Mixing-Matrix",
-              LesHouches -> NMNMIX   }}, 
-
+{ZN,        { Description->"Neutralino Mixing-Matrix" }}, 
 {UP,        { Description->"Chargino-plus Mixing-Matrix"}}, 
 {UM,        { Description->"Chargino-minus Mixing-Matrix"}}, 
 
@@ -82,21 +63,56 @@ ParameterDefinitions = {
 {ZUR,       { Description ->"Right-Up-Mixing-Matrix"}},           
               
 {ThetaW,    { Description -> "Weinberg-Angle"}},                           
-{PhaseGlu,  { Description -> "Gluino-Phase" }},   
-
+{PhaseGlu,  { Description -> "Gluino-Phase" }},
 {ZZ, {Description ->   "Photon-Z Mixing Matrix"}},
-{ZW, {Description -> "W Mixing Matrix" }},
+{ZW, {Description -> "W Mixing Matrix"}},
 {ZfW, {Description ->    "Wino Mixing Matrix"}},
-                                                                      
-{\[Kappa],   {Description -> "Singlet Self-Interaction"}},                               
-{T[\[Kappa]],  { Description -> "Softbreaking Singlet Self-Interaction" }}, 
-{\[Lambda],   { Description -> "Singlet-Higgs-Interaction"   }},                               
-{T[\[Lambda]],  {Description -> "Softbreaking Singlet-Higgs-Interaction"}},        
-             
-{ms2,       { Description -> "Softbreaking Singlet Mass" }},
-{vS,        { Description -> "Singlet-VEV"}}             
-             
+
+{m32, {Description -> "Gravitino Mass"}},
+{MP, {Description -> "Planck Mass"}},
+
+{Xi[B], {Description -> "Hypercharge FI-Term"}},
+
+{Yt,  {LaTeX -> "Y_{t'}",
+       LesHouches -> Yt,
+       OutputName->Yt }},
+
+
+{T[Yt], {  LaTeX -> "T_{t'}",
+       LesHouches -> Tt,
+       OutputName->Tt }},
+
+{mT, { LaTeX -> "M_{T'}",
+       LesHouches -> {VectorTop,1},
+       OutputName->MTp }},
+
+{B[mT],{  LaTeX -> "B_{T'}",
+       LesHouches -> {VectorTop,2},
+       OutputName->BTp }},
+
+{mUT, { LaTeX -> "m_{t'}",
+       LesHouches -> mUT,
+       OutputName->mUT }},
+
+{B[mUT],{  LaTeX -> "B_{t'}",
+       LesHouches -> bUT,
+       OutputName->BUT }},
+
+{mt12, { LaTeX -> "m_{\\tilde{t}'}^2",
+       LesHouches -> {VectorTop,3},
+       OutputName->mt12 }},
+
+{mt22, { LaTeX -> "m_{\\tilde{\\bar{t}}'}^2",
+       LesHouches -> {VectorTop,4},
+       OutputName->mt22 }},
+
+{mut12, { LaTeX -> "m_{\\tilde u \\tilde t'}^2",
+       LesHouches -> mut2,
+       OutputName->mut12 }}
+
+
+
+                                  
  }; 
  
-
 

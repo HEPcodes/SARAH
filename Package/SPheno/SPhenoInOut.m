@@ -27,12 +27,12 @@ tempList = Transpose[BetaGauge][[1]];
 AddParametersToList[tempList];
 
 (*
-If[Length[listWtriOne]!= 0, tempList=Transpose[Transpose[listWtriOne/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]]; AddParametersToList[tempList]; ];
-If[Length[listWbiOne]!= 0,tempList=Transpose[Transpose[listWbiOne/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]];AddParametersToList[tempList];];
-If[Length[listAtriOne]!= 0,tempList=Transpose[Transpose[listAtriOne/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]];AddParametersToList[tempList];];
-If[Length[listAbiOne]!= 0,tempList=Transpose[Transpose[listAbiOne/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]];AddParametersToList[tempList];];
-If[Length[listAone]!= 0,tempList=Transpose[Transpose[listAone/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]];AddParametersToList[tempList];];
-If[Length[listWone]!= 0,tempList=Transpose[Transpose[listWone/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]];AddParametersToList[tempList];];
+If[Length[listWtriOne]\[NotEqual] 0, tempList=Transpose[Transpose[listWtriOne/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]]; AddParametersToList[tempList]; ];
+If[Length[listWbiOne]\[NotEqual] 0,tempList=Transpose[Transpose[listWbiOne/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]];AddParametersToList[tempList];];
+If[Length[listAtriOne]\[NotEqual] 0,tempList=Transpose[Transpose[listAtriOne/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]];AddParametersToList[tempList];];
+If[Length[listAbiOne]\[NotEqual] 0,tempList=Transpose[Transpose[listAbiOne/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]];AddParametersToList[tempList];];
+If[Length[listAone]\[NotEqual] 0,tempList=Transpose[Transpose[listAone/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]];AddParametersToList[tempList];];
+If[Length[listWone]\[NotEqual] 0,tempList=Transpose[Transpose[listWone/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]];AddParametersToList[tempList];];
 *)
 If[Length[BetaLijkl]!= 0, tempList=Transpose[BetaLijkl][[1]]/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1 /. {i1->gen1,i2->gen2,i3->gen3,i4->gen4}; AddParametersToList[tempList]; ];
 If[Length[BetaYijk]!= 0, tempList=Transpose[BetaYijk][[1]]/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1/. {i1->gen1,i2->gen2,i3->gen3,i4->gen4}; AddParametersToList[tempList]; ];
@@ -139,7 +139,7 @@ realVar = Join[realVar,{ToExpression[SPhenoForm[listVEVs[[i]]]<>"Fix"]}];
 i++;];
 
  (*
-If[NonSUSYModel==True,
+If[NonSUSYModel\[Equal]True,
 listAllParameters = LowScaleParameter;
 listAllParametersAndVEVs = Join[LowScaleParameter,listVEVs];
 ]; *)
@@ -1365,7 +1365,7 @@ WriteString[sphenoInOut,"Write(io_L,100) \"# Including the calculation of flavor
 WriteString[sphenoInOut,"Write(io_L,100) \"#   W. Porod, F. Staub, A. Vicente; Eur.Phys.J. C74 (2014) 8, 2992; arXiv:1405.1434 \"\n"];
 WriteString[sphenoInOut,"Write(io_L,100) \"# Two-loop masss corrections to Higgs fields based on \"\n"];
 WriteString[sphenoInOut,"Write(io_L,100) \"#   M. D. Goodsell, K. Nickel, F. Staub; arXiv:1411.0675 \"\n"];
-WriteString[sphenoInOut,"Write(io_L,100) \"#   M. D. Goodsell, K. Nickel, F. Staub; arXiv:1501.XXXXX \"\n"];
+WriteString[sphenoInOut,"Write(io_L,100) \"#   M. D. Goodsell, K. Nickel, F. Staub; arXiv:1503.03098\"\n"];
 WriteString[sphenoInOut,"Write(io_L,100) \"#  \"\n"];
 WriteString[sphenoInOut,"Write(io_L,100) \"# in case of problems send email to florian.staub@cern.ch and goodsell@lpthe.jussieu.fr\ \"\n"];
 WriteString[sphenoInOut,"Write(io_L,100) \"# ----------------------------------------------------------------------\" \n"];
@@ -2289,7 +2289,7 @@ WriteInOutFT:=Block[{i},
 WriteString[sphenoInOut,"Write(io_L,100) \"Block FineTuning #  \" \n"];
 (*
 WriteString[sphenoInOut,"Write(io_L,1010) 0, MaxVal(FineTuningResults),  \"#  Overall FT \"  \n"];
-For[i=1,i<=Length[FineTuningParameters],
+For[i=1,i\[LessEqual]Length[FineTuningParameters],
 WriteString[sphenoInOut,"Write(io_L,1010) "<>ToString[i]<>", FineTuningResults("<>ToString[i] <>"),  \"# "<>ToString[FineTuningParameters[[i,1]]] <>"\" \n"];
 i++;];
 

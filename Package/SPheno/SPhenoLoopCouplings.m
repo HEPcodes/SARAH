@@ -28,7 +28,7 @@ Print["----------------------------------------------"];
 
 Print[StyleForm["Write routine for loop couplings","Section",FontSize->12]];
  
-$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+(* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 sphenoLoopCoup=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"LoopCouplings_"<>ModelName<>".f90"]];
 
 InitSPhenoLoopCouplings[Eigenstates];
@@ -51,13 +51,13 @@ Print["Generate effective Higgs-to-Fermion couplings"];
 
 ParametersEffCouplings={};
 
-If[FreeQ[ParticleDefinitions[Eigenstates],"Higgs"]===False && FreeQ[ParameterDefinitions,"Scalar-Mixing-Matrix"]==False,
+If[FreeQ[ParticleDefinitions[Eigenstates],"Higgs"]===False && FreeQ[ParameterDefinitions,"Scalar-Mixing-Matrix"]\[Equal]False,
 GenerateHiggsFermionCouplings[HiggsBoson,Electron, ElectronYukawa,ElectronMatrixL ,ElectronMatrixR, VEVSM1,HiggsMixingMatrix, 1];
 GenerateHiggsFermionCouplings[HiggsBoson,TopQuark,UpYukawa,UpMatrixL ,UpMatrixR,VEVSM2,HiggsMixingMatrix ,2];
 GenerateHiggsFermionCouplings[HiggsBoson,BottomQuark, DownYukawa,DownMatrixL ,DownMatrixR,VEVSM1,HiggsMixingMatrix ,1];
 ];
 
-If[FreeQ[ParticleDefinitions[Eigenstates],"Pseudo-Scalar Higgs"]===False && FreeQ[ParameterDefinitions,"Pseudo-Scalar-Mixing-Matrix"]==False,
+If[FreeQ[ParticleDefinitions[Eigenstates],"Pseudo-Scalar Higgs"]===False && FreeQ[ParameterDefinitions,"Pseudo-Scalar-Mixing-Matrix"]\[Equal]False,
 GenerateHiggsFermionCouplings[PseudoScalar,Electron,ElectronYukawa,ElectronMatrixL ,ElectronMatrixR, VEVSM1,PseudoScalarMixingMatrix, 1];
 GenerateHiggsFermionCouplings[PseudoScalar,TopQuark,UpYukawa,UpMatrixL ,UpMatrixR,VEVSM2,PseudoScalarMixingMatrix ,2];
 GenerateHiggsFermionCouplings[PseudoScalar,BottomQuark, DownYukawa,DownMatrixL ,DownMatrixR,VEVSM1,PseudoScalarMixingMatrix,1];
@@ -189,8 +189,8 @@ ParticlesToGluon=coupAlphaStrong;
 
 (*
 temp={};
-For[i=1,i<=Length[coupAlphaStrong],
-If[FreeQ[SMParticles,coupAlphaStrong[[i,1]]]==True ,
+For[i=1,i\[LessEqual]Length[coupAlphaStrong],
+If[FreeQ[SMParticles,coupAlphaStrong[[i,1]]]\[Equal]True ,
 temp=Join[temp,{coupAlphaStrong[[i]]}];
 ];
 i++;];

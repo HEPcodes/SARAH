@@ -28,7 +28,7 @@ Print["--------------------------------------"];
 
 Print[StyleForm["Write routine for running couplings in decays","Section",FontSize->12]];
 
-$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+(* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 sphenoCoup=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"CouplingsForDecays_"<>ModelName<>".f90"]];
 
 
@@ -328,9 +328,10 @@ WriteHiggsBoundsRatiosPseudoScalar[sphenoCoup, SA`CurrentStates, Table[SPhenoCou
 
 WriteString[sphenoCoup, "If (i1.eq."<>ToString[getGenSPhenoStart[PseudoScalar]]<>") Then \n"];
 If[FreeQ[namesAll,SPhenoCoupling[CS[PseudoScalar,PseudoScalar,VectorZ]]]==False,
-WriteString[sphenoBR,"CPL_A_A_Z = Abs("<>ToString[SPhenoCoupling[CS[PseudoScalar,PseudoScalar,VectorZ]]]<>"**2/("<>ToString[leftCoupling]<>"**2/(cos("<>SPhenoForm[Weinberg]<>")*4._dp)))\n"];,
+(* CHANGED 03.05.15 *)
+WriteString[(*sphenoBR,*)sphenoCoup,"CPL_A_A_Z = Abs("<>ToString[SPhenoCoupling[CS[PseudoScalar,PseudoScalar,VectorZ]]]<>"**2/("<>ToString[leftCoupling]<>"**2/(cos("<>SPhenoForm[Weinberg]<>")*4._dp)))\n"];,
 If[FreeQ[ParticleDefinitions[SPheno`Eigenstates],"Pseudo-Scalar Higgs"]===False,
-WriteString[sphenoBR,"CPL_A_A_Z = 0._dp \n"];
+WriteString[(*sphenoBR,*)sphenoCoup,"CPL_A_A_Z = 0._dp \n"];
 ];
 ];
 WriteString[sphenoCoup, "End if \n"];

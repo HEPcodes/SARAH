@@ -164,8 +164,8 @@ ChargeFactorField[i1,Fields[[i,3]]]=0;,
 If[FieldDim[i,i1]>1,
 nrInd=TestDim[FieldDim[i,i1],Gauge[[i1,2,1]]];
 ChargeFactorField[i1,Fields[[i,3]]]=nrInd[[2]]-nrInd[[3]];
-ChargeFactorField[i1,FFields[[i]]/. conj[x_]->x//.A_[{b__}]->A]=sign (nrInd[[2]]-nrInd[[3]]);
-ChargeFactorField[i1,SFields[[i]]/. conj[x_]->x//.A_[{b__}]->A]=sign (nrInd[[2]]-nrInd[[3]]);,
+ChargeFactorField[i1,FFields[[i]]/. conj[x_]->x//.A_[{b__}]->A]=sign(nrInd[[2]]-nrInd[[3]]);
+ChargeFactorField[i1,SFields[[i]]/. conj[x_]->x//.A_[{b__}]->A]=sign(nrInd[[2]]-nrInd[[3]]);,
 nrInd=TestDim[-FieldDim[i,i1],Gauge[[i1,2,1]]];
 ChargeFactorField[i1,Fields[[i,3]]]=-(nrInd[[2]]-nrInd[[3]]);
 ChargeFactorField[i1,FFields[[i]]/. conj[x_]->x//.A_[{b__}]->A]=- sign (nrInd[[2]]-nrInd[[3]]);
@@ -228,7 +228,7 @@ DynamicCheckingCCSup="local symmetries okay. ";
 ];
 
 (*
-If[rpv==False && RParityConservation==True,
+If[rpv\[Equal]False && RParityConservation\[Equal]True,
 Print["     No violation of R-Parity in superpotential"];
 ];
 *)
@@ -244,9 +244,9 @@ CheckLagTermChargeConservation[term_]:=CheckLagTermChargeConservation[term,True]
 (*
 CheckLagTermChargeConservation[term_,printout_]:=Block[{i1,sum=0,j,violation},
 violation=False;
-For[i1=1,i1<=Length[Gauge],
+For[i1=1,i1\[LessEqual]Length[Gauge],
 sum=0;
-For[j=1,j<=Length[term],
+For[j=1,j\[LessEqual]Length[term],
 If[Head[term[[j]]]===conj ||Head[term[[j]]]===bar, 
 sum -=ChargeFactorField[i1,RE[term[[j]]]];,
 sum +=ChargeFactorField[i1,RE[term[[j]]]];
@@ -254,7 +254,7 @@ sum +=ChargeFactorField[i1,RE[term[[j]]]];
 j++;];
 If[FullSimplify[sum]=!=0,
 If[Gauge[[i1,2]]===U[1],
-If[printout==True,
+If[printout\[Equal]True,
 If[Cases[sum,x_?SymbolQS,2]==={},
 Message[Lagrange::ChargeViolation,Gauge[[i1,3]]];,
 Message[Lagrange::MaybeChargeViolation,Gauge[[i1,3]],Cases[sum,x_?SymbolQS,2]];
@@ -262,13 +262,13 @@ Message[Lagrange::MaybeChargeViolation,Gauge[[i1,3]],Cases[sum,x_?SymbolQS,2]];
 ];
 violation=True;,
 If[Mod[sum,Gauge[[i1,2,1]]]=!=0, 
-If[printout==True,Message[Lagrange::ChargeViolation,Gauge[[i1,3]]];];
+If[printout\[Equal]True,Message[Lagrange::ChargeViolation,Gauge[[i1,3]]];];
 violation=True;
 ];
 ];
 ]; 
 i1++;];
-If[violation==True,
+If[violation\[Equal]True,
 Return[False];,
 Return[True];
 ];
@@ -430,12 +430,12 @@ allfieldCombis=(List@@#)&/@Intersection[(C@@#)&/@Subsets[Flatten[{Transpose[Fiel
 allowed = Intersection[Select[allfieldCombis,(CheckChargeConservationInteraction[#]==True)&]];
 allowed=Select[allowed,(CheckConservationGlobal[#]==True)&];
 (* singlets = Cases[allowed,{s_}];
-For[i=1,i<=Length[singlets],
+For[i=1,i\[LessEqual]Length[singlets],
 allowed = Join[allowed ,{{singlets[[i,1]],singlets[[i,1]]},{singlets[[i,1]],singlets[[i,1]],singlets[[i,1]]}}];
 i++]; *)
 (*
-For[i=1,i<=Length[allowed],
-If[RParityConservation==True,
+For[i=1,i\[LessEqual]Length[allowed],
+If[RParityConservation\[Equal]True,
 If[Times@@(getRParitySF/@allowed[[i]])===1,
 temp=Join[temp,{allowed[[i]]}];
 ];,
@@ -449,11 +449,11 @@ present=(C@@#)&/@Transpose[SuperPotential][[2]];
 notpresent=Complement[temp,present];
 (*
 If[notpresent=!={},
-If[RParityConservation==True,
+If[RParityConservation\[Equal]True,
 Message[PossibleTerms::NoRParity,(List@@#)&/@notpresent];,
 Message[PossibleTerms::IncludeRParity,(List@@#)&/@notpresent];
 ];,
-If[RParityConservation==True,
+If[RParityConservation\[Equal]True,
 Print["    All terms allowed by gauge invariance and R-parity conservation are present"];,
 Print["    All terms allowed by gauge invariance are present"];
 ];
@@ -518,7 +518,7 @@ allowed=Intersection[(C@@#)&/@allowed];
 SA`CheckGlobalLagLevel=True;
 allowed=Select[allowed,(CheckConservationGlobal[#]==True)&];
 SA`CheckGlobalLagLevel=False;
-present=(C@@#)&/@SA`LagTermsNonSUSY;
+present=(C@@#)&/@Join[SA`LagTermsNonSUSY,conj/@SA`LagTermsNonSUSY];
 
 notpresent=Complement[allowed,present];
 Print[notpresent];

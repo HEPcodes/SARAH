@@ -28,7 +28,7 @@ Print["--------------------------------------"];
 
 Print[StyleForm["Write Couplings","Section",FontSize->12]];
 
-$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+(* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 sphenoCoup=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"Couplings_"<>ModelName<>".f90"]];
 
 SubNonAbelianNonSelf={};

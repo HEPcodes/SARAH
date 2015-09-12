@@ -406,7 +406,7 @@ ParameterDefinitionsMain = {
              
 {{  Description->"Charged-Mixing-Matrix", 
  			 LaTeX -> "Z^+",
-             Real ->False,
+             Real ->True,
              DependenceOptional -> {{-Cos[\[Beta]],Sin[\[Beta]]},
                             {Sin[\[Beta]],Cos[\[Beta]]}}, 
              Value -> None, 

@@ -1202,6 +1202,8 @@ Return[newString];
 
 (* SPhenoForm[x_String]:=StringReplace[StringReplace[x," "->""],StringReSPheno]; *)
 
+SPhenoForm[x_re]:= "Real("<>SPhenoForm[x[[1]]]<>",dp)"; 
+SPhenoForm[x_im]:= "Aimag("<>SPhenoForm[x[[1]]]<>")"; 
 SPhenoForm[x_String]:=SPhenoForm[ToExpression[x]]; 
 SPhenoForm[LHInput[x_]]:=SPhenoForm[x]<>"IN";
 SPhenoForm[DotP[x_]]:="Dot_Product("<>SPhenoForm[x[[1]]]<>","<>SPhenoForm[x[[2]]]<>")";

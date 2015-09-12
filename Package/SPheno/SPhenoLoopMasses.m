@@ -27,7 +27,7 @@ Print["--------------------------------------"];
 *)
 Print[StyleForm["Write loop masses","Section",FontSize->12]];
 
-$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+(* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 (* CreateDirectory[$sarahCurrentSPhenoDir]; *)
 sphenoLoop=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"LoopMasses_"<>ModelName<>".f90"]];
 
@@ -326,7 +326,7 @@ If[UseHiggs2LoopMSSM==True,
 higgsdim=Min[4,getGenSPheno[hh]];(*at least two higgses,but maximum 4 allowed here!*)
 higgsdimstr=ToString[higgsdim];
 WriteString[sphenoLoop,"Real(dp) :: tadpoles_MSSM(2), vevs_MSSM(2), Q2, Pi2S_MSSM(2,2), sinb2, cosb2, sinbcosb \n"];
-WriteString[sphenoLoop,"Real(dp) :: tadpoles_asat(4), vevs_asat(4), Pi2S_asat(4,4),PiP2S_asat(4,4), Mglu_asat(2),mo2_asat \n"];
+WriteString[sphenoLoop,"Real(dp) :: tadpoles_asat(4), vevs_asat(4), Pi2S_asat(4,4),PiP2S_asat(4,4), Mglu_asat(2),mo2_asat, MAps \n"];
 WriteString[sphenoLoop,"complex(dp) :: MDO_asat,BO_asat,MO_asat,lam_asat,LT_asat, ZG_asat(2,2), mu_asat\n"];
 ];
 
@@ -668,14 +668,15 @@ WriteString[sphenoLoop,"BO_asat = "<>ToString[tvar]<>"\n"];
 tpos=Position[ParameterDefinitions,"Singlet-Higgs-Interaction"];
 If[tpos=!={},
 tpos=Position[SuperPotential,ParameterDefinitions[[tpos[[1,1]],1]]];
+singlet=DeleteCases[DeleteCases[SuperPotential[[tpos[[1,1]]]][[2]],Hd],Hu][[1]];
 tvarres=SuperPotential[[tpos[[1,1]]]];
 If[FreeQ[tvarres,{___,Hu,___,Hd,___}]==False,
 WriteString[sphenoLoop,"lam_asat = real("<>ToString[-1*tvarres[[1,1]]]<>"*"<>ToString[getEntryParameter[tvarres[[1,2]],OutputName]]<>",dp)\n"];,
 WriteString[sphenoLoop,"lam_asat = real("<>ToString[tvarres[[1,1]]]<>"*"<>ToString[getEntryParameter[tvarres[[1,2]],OutputName]]<>",dp)\n"];
 ];,
-tpos=Position[SuperPotential,{S,Hd,Hu}];
+tpos=Position[SuperPotential,{singlet,Hd,Hu}];
 If[tpos=={},
-tpos=Position[SuperPotential,{S,Hu,Hd}];
+tpos=Position[SuperPotential,{singlet,Hu,Hd}];
 If[tpos=={},
 WriteString[sphenoLoop,"lam_asat = 0._dp\n"];,
 tvarres=SuperPotential[[tpos[[1,1]]]][[1]];
@@ -689,7 +690,7 @@ If[tpos=={},
 tpos=Position[SuperPotential,{Hu,Hd}];
 If[tpos=={},
 WriteString[sphenoLoop,"mu_asat = 0.001_dp\n"];,
-WriteString[sphenoLoop,"mu_asat = mu \n"];
+WriteString[sphenoLoop,"mu_asat = -mu \n"];
 ];,
 WriteString[sphenoLoop,"mu_asat = mu \n"];
 ];
@@ -726,8 +727,40 @@ WriteString[sphenoLoop,"end do\n\n"];
 WriteString[sphenoLoop,"If ( TwoLoopMethod .eq. 9) then ! Slavich's routines \n\n"];
 WriteString[sphenoLoop,"vevs_MSSM(1) = vd \n"];
 WriteString[sphenoLoop,"vevs_MSSM(2) = vu \n"];
+
+
+tpos=Position[SuperPotential,{Hd,Hu}];
+If[tpos=={},
+tpos=Position[SuperPotential,{Hu,Hd}];
+If[tpos=={},
+WriteString[sphenoLoop,"MAps = 0.0 \n"];,
+WriteString[sphenoLoop,"MAps = Bmu*(vu/vd+vd/vu) \n"];
+];,
+WriteString[sphenoLoop,"MAps = -Bmu*(vu/vd+vd/vu)\n"];
+];
+
+
+tpos=Position[ParameterDefinitions,"Singlet-Higgs-Interaction"];
+If[tpos=!={},
+tpos=Position[SuperPotential,ParameterDefinitions[[tpos[[1,1]],1]]];
+tvarres=SuperPotential[[tpos[[1,1]]]];
+If[FreeQ[tvarres,{___,Hu,___,Hd,___}]==False,
+WriteString[sphenoLoop,"MAps = MAps + TLam*vS/Sqrt(2._dp)/sin(Atan(vu/vd))/cos(Atan(vu/vd)) \n"];
+WriteString[sphenoLoop,"mu_asat = mu + lam*vS/Sqrt(2._dp) \n"];,
+WriteString[sphenoLoop,"MAps = MAps - TLam*vS/Sqrt(2._dp)/sin(Atan(vu/vd))/cos(Atan(vu/vd))\n"];
+WriteString[sphenoLoop,"mu_asat = mu - lam*vS/Sqrt(2._dp) \n"];
+];
+];
+
+
+tpos=Position[SuperPotential,{singlet,singlet,singlet}];
+If[tpos=!={},
+WriteString[sphenoLoop,"MAps = MAps + lam*vS**2*kap/2._dp/sin(Atan(vu/vd))/cos(Atan(vu/vd)) \n"];
+];
+
+
 WriteString[sphenoLoop,"Q2 = GetRenormalizationScale() \n"];
-WriteString[sphenoLoop,"Call Yukawa2L_Tadpoles_MSSM(mAH2(2),vevs_MSSM, &\n"];
+WriteString[sphenoLoop,"Call Yukawa2L_Tadpoles_MSSM(MAps,vevs_MSSM, &\n"];
 WriteString[sphenoLoop,"& Real(md2(3,3),dp),Real(mu2(3,3),dp),Real(mq2(3,3),dp),Real(me2(3,3),dp), & \n"];
 WriteString[sphenoLoop,"& Real(ml2(3,3),dp), Td(3,3), Tu(3,3), Te(3,3), Yd(3,3), &  \n"];
 WriteString[sphenoLoop,"& Yu(3,3), Ye(3,3), "<>If[UseAuxiliaryMu2Loop===True,SPhenoForm[AuxiliaryMu2Loop],"mu_asat"]<>", tadpoles_MSSM,kont ) \n\n"];
@@ -736,13 +769,13 @@ WriteString[sphenoLoop,"ti_ep2L(1) = ti_ep2L(1) + tadpoles_MSSM(1)*vevs_MSSM(1) 
 WriteString[sphenoLoop,"ti_ep2L(2) = ti_ep2L(2) + tadpoles_MSSM(2)*vevs_MSSM(2) \n \n"];
 WriteString[sphenoLoop,"vevs_MSSM(1) = vd \n"];
 WriteString[sphenoLoop,"vevs_MSSM(2) = vu \n"];
-WriteString[sphenoLoop,"Call Yukawa2L_Scalar(Q2,mAH2(2),vevs_MSSM, & \n"];
+WriteString[sphenoLoop,"Call Yukawa2L_Scalar(Q2,MAps,vevs_MSSM, & \n"];
 WriteString[sphenoLoop," Real(md2(3,3),dp),Real(mu2(3,3),dp),Real(mq2(3,3),dp),Real(me2(3,3),dp), & \n"];
 WriteString[sphenoLoop," Real(ml2(3,3),dp), Td(3,3), Tu(3,3), Te(3,3), Yd(3,3), &  \n"];
 WriteString[sphenoLoop," Yu(3,3), Ye(3,3), "<>If[UseAuxiliaryMu2Loop===True,SPhenoForm[AuxiliaryMu2Loop],"mu_asat"]<>",0, Pi2S_MSSM,kont ) \n\n"];
 
 WriteString[sphenoLoop,"! Some two loop corrections are absorbed in M_A in Pietro's routines \n\n"];
-WriteString[sphenoLoop," Call Yukawa2L_PseudoScalar(mAH2(2),vevs_MSSM,& \n"];
+WriteString[sphenoLoop," Call Yukawa2L_PseudoScalar(MAps,vevs_MSSM,& \n"];
 WriteString[sphenoLoop," & Real(md2(3,3),dp),Real(mu2(3,3),dp),Real(mq2(3,3),dp),Real(me2(3,3),dp),& \n"];
 WriteString[sphenoLoop," & Real(ml2(3,3),dp),Td(3,3),Tu(3,3),Te(3,3),Yd(3,3),& \n"];
 WriteString[sphenoLoop," & Yu(3,3),Ye(3,3),"<>If[UseAuxiliaryMu2Loop===True,SPhenoForm[AuxiliaryMu2Loop],"mu_asat"]<>",Pi2A0,kont) \n"];
@@ -789,8 +822,12 @@ For[i=1,i<=Length[SA`ListParametersFromTadpoles1L],
 If[FreeQ[parametersSave,SA`ListParametersFromTadpoles1L[[i]]]==False,
 WriteString[sphenoLoop,SPhenoForm[SA`ListParametersFromTadpoles1L[[i]]] <>"1L = " <> SPhenoForm[SA`ListParametersFromTadpoles1L[[i]]] <>"\n"];
 ];
+If[(FreeQ[parameters,T[SA`ListParametersFromTadpoles1L[[i]]]] ==False) &&(FreeQ[SA`ListParametersFromTadpoles1L,T[SA`ListParametersFromTadpoles1L[[i]]]]),
+subTadpolesHiggs2Loop = Join[subTadpolesHiggs2Loop,{T[SA`ListParametersFromTadpoles1L[[i]]]->T[SA`ListParametersFromTadpoles1L[[i]]],SA`ListParametersFromTadpoles1L[[i]]->ToExpression[SPhenoForm[SA`ListParametersFromTadpoles1L[[i]]] <>"1L"]}];
+subTadpolesHiggs2Loop2L = Join[subTadpolesHiggs2Loop2L,{T[SA`ListParametersFromTadpoles1L[[i]]]->T[SA`ListParametersFromTadpoles1L[[i]]],SA`ListParametersFromTadpoles1L[[i]]->ToExpression[SPhenoForm[SA`ListParametersFromTadpoles1L[[i]]] <>"2L"]}];,
 subTadpolesHiggs2Loop = Join[subTadpolesHiggs2Loop,{SA`ListParametersFromTadpoles1L[[i]]->ToExpression[SPhenoForm[SA`ListParametersFromTadpoles1L[[i]]] <>"1L"]}];
 subTadpolesHiggs2Loop2L = Join[subTadpolesHiggs2Loop2L,{SA`ListParametersFromTadpoles1L[[i]]->ToExpression[SPhenoForm[SA`ListParametersFromTadpoles1L[[i]]] <>"2L"]}];
+];
 i++;];
 
 If[SameTadpoleSolutions=!=True,
@@ -799,8 +836,12 @@ If[FreeQ[solHighScale,SA`ListParametersFromTadpoles1Llow[[i]]],
 If[FreeQ[parametersSave,SA`ListParametersFromTadpoles1Llow[[i]]]==False,
 WriteString[sphenoLoop,SPhenoForm[SA`ListParametersFromTadpoles1Llow[[i]]] <>"1L = " <> SPhenoForm[SA`ListParametersFromTadpoles1Llow[[i]]] <>"\n"];
 ];
+If[(FreeQ[parameters,T[SA`ListParametersFromTadpoles1L[[i]]]] ==False) &&(FreeQ[SA`ListParametersFromTadpoles1L,T[SA`ListParametersFromTadpoles1L[[i]]]]),
+subTadpolesHiggs2Loop = Join[subTadpolesHiggs2Loop,{T[SA`ListParametersFromTadpoles1Llow[[i]]]->T[SA`ListParametersFromTadpoles1Llow[[i]]],SA`ListParametersFromTadpoles1Llow[[i]]->ToExpression[SPhenoForm[SA`ListParametersFromTadpoles1Llow[[i]]] <>"1L"]}];
+subTadpolesHiggs2Loop2L = Join[subTadpolesHiggs2Loop2L,{T[SA`ListParametersFromTadpoles1Llow[[i]]]->T[SA`ListParametersFromTadpoles1Llow[[i]]],SA`ListParametersFromTadpoles1Llow[[i]]->ToExpression[SPhenoForm[SA`ListParametersFromTadpoles1Llow[[i]]] <>"2L"]}];,
 subTadpolesHiggs2Loop = Join[subTadpolesHiggs2Loop,{SA`ListParametersFromTadpoles1Llow[[i]]->ToExpression[SPhenoForm[SA`ListParametersFromTadpoles1Llow[[i]]] <>"1L"]}];
 subTadpolesHiggs2Loop2L = Join[subTadpolesHiggs2Loop2L,{SA`ListParametersFromTadpoles1Llow[[i]]->ToExpression[SPhenoForm[SA`ListParametersFromTadpoles1Llow[[i]]] <>"2L"]}];
+];
 ];
 i++;];
 ];

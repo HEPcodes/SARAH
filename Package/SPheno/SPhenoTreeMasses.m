@@ -27,7 +27,7 @@ Print["----------------------------------------------"];
 *)
 Print[StyleForm["Write Tree Level-Masses","Section",FontSize->12]];
  
-$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+(* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 (* CreateDirectory[$sarahCurrentSPhenoDir]; *)
 sphenoTree=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"SusyMasses_"<>ModelName<>".f90"]];
 
@@ -184,11 +184,11 @@ NewMasses = Join[NewMasses,{{CurrentMass,Length[massesTree[[i]]]}}];
 realVar=Join[realVar,{CurrentMass,CurrentMass2}];
 
 
-invP=Transpose[Select[parameters,(FreeQ[massesTree[[i]],#[[1]]]==False)&]][[1]];
+invP=TransposeChecked[Select[parameters,(FreeQ[massesTree[[i]],#[[1]]]==False)&]][[1]];
 (*
 invP={};
-For[j=1,j<=Length[parameters],
-If[FreeQ[massesTree[[i]],parameters[[j,1]]]==False,
+For[j=1,j\[LessEqual]Length[parameters],
+If[FreeQ[massesTree[[i]],parameters[[j,1]]]\[Equal]False,
 invP=Join[invP,{parameters[[j,1]]}];
 ];
 j++;]; *)
@@ -785,9 +785,9 @@ WriteString[sphenoTree, "NameOfUnit(Iname) = '"<>"Calculate"<> Name<>"'\n \n"];
 
 (*
 WriteString[sphenoTree, "! Get rotation matrix at the minimum \n"];
-For[i2=1,i2<=ToExpression[dimMatrix],
-For[i3=i2,i3<=ToExpression[dimMatrix],
-MakeSPhenoCoupling[MatrixFunction[[i2,i3]] /. subVEVfixedAll /. RXi[a__]->0,"mat("<>ToString[i2]<>","<>ToString[i3]<>")",sphenoTree];
+For[i2=1,i2\[LessEqual]ToExpression[dimMatrix],
+For[i3=i2,i3\[LessEqual]ToExpression[dimMatrix],
+MakeSPhenoCoupling[MatrixFunction[[i2,i3]] /. subVEVfixedAll /. RXi[a__]\[Rule]0,"mat("<>ToString[i2]<>","<>ToString[i3]<>")",sphenoTree];
 i3++;];
 i2++;];
 
@@ -837,8 +837,8 @@ WriteString[sphenoTree, "mat = MatMul(MatMul("<>  MixingName <>"FIX, mat), Trans
 *)
 (*
 WriteString[sphenoTree, "! Put mixing with Goldstones to zero\n"];
-For[i2=1,i2<=getGenSPhenoStart[particle]-1,
-For[i3=i2+1,i3<=ToExpression[dimMatrix],
+For[i2=1,i2\[LessEqual]getGenSPhenoStart[particle]-1,
+For[i3=i2+1,i3\[LessEqual]ToExpression[dimMatrix],
 WriteString[sphenoTree,"mat("<>ToString[i2]<>","<>ToString[i3]<>") = 0._dp \n"];
 WriteString[sphenoTree,"mat("<>ToString[i3]<>","<>ToString[i2]<>") = 0._dp \n"];
 i3++;];
@@ -859,7 +859,7 @@ WriteString[sphenoTree,"End do\n"];
 ];
 
 (*
-For[i2=1,i2<=getGenSPhenoStart[particle]-1,
+For[i2=1,i2\[LessEqual]getGenSPhenoStart[particle]-1,
 WriteString[sphenoTree, Name <>"2("<>ToString[i2]<>") = 0._dp \n"];
 i2++;];
 *)
@@ -882,7 +882,7 @@ WriteString[sphenoTree, "  Return \n"];
 WriteString[sphenoTree, "End If \n\n\n"];
 
 (*
-If[FreeQ[ConditionForMassOrdering,particle]==False,pos =Position[ConditionForMassOrdering,particle][[1,1]];WriteString[sphenoTree,ConditionForMassOrdering[[pos,2]]];];
+If[FreeQ[ConditionForMassOrdering,particle]\[Equal]False,pos =Position[ConditionForMassOrdering,particle][[1,1]];WriteString[sphenoTree,ConditionForMassOrdering[[pos,2]]];];
 *)
 
 

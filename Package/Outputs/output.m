@@ -708,6 +708,8 @@ ReleaseHold[temp];
 i++;];
 
 Format[x_Adj, FortranForm]:=Format["adj"<>ToString[FortranForm[x[[1]]]],OutputForm]/;SARAHFortran==True;
+Format[x_re, FortranForm]:=Format["Real("<>ToString[FortranForm[x[[1]]]]<>",dp)",OutputForm]/;SARAHFortran==True;
+Format[x_im, FortranForm]:=Format["Aimag("<>ToString[FortranForm[x[[1]]]]<>")",OutputForm]/;SARAHFortran==True;
 
 For[i=1,i<=Length[threeIndexParameter],
 For[j=1,j<=5,

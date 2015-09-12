@@ -42,8 +42,8 @@ NameOfStates={GaugeES, EWSB};
 (* ----- Before EWSB ----- *)
 
 DEFINITION[GaugeES][Additional]= {
-	{LagHC, {Overwrite->True, AddHC->True}},
-	{LagNoHC,{Overwrite->True, AddHC->False}}
+	{LagHC, {AddHC->True}},
+	{LagNoHC,{AddHC->False}}
 };
 
 

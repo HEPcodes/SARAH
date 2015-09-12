@@ -231,9 +231,36 @@ CurrentInsertionOrder = InsertionOrder /. diagrams[[i,2]];
 
 (* Calculate the color factor of the particles in the loop *)
 If[nf===4,
-cfactor = getChargeFactor[diagrams[[i]] /. {Cp[a__],Cp[b__],Cp[c__],Cp[d__]}->{Cp[a],Cp[b],Cp[c]}/. {External[3]->NONE[3],External[4]->NONE[4]},{{{External[1],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},
+(*
+cfactor = getChargeFactor[diagrams[[i]] /. {Cp[a__],Cp[b__],Cp[c__],Cp[d__]}\[Rule]{Cp[a],Cp[b],Cp[c]}/. {External[3]\[Rule]NONE[3],External[4]\[Rule]NONE[4]},{{{External[1],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},
 {{External[2],ex2},{AntiField[Internal[1]],in1},{Internal[3],in3}},
-{{Propagator,ex3},{Internal[2],in2},{AntiField[Internal[3]],in3}}} /. diagrams[[i,2]]];,
+{{Propagator,ex3},{Internal[2],in2},{AntiField[Internal[3]],in3}}} /. diagrams[[i,2]]];
+
+Print[CurrentInsertionOrder];
+Switch[CurrentInsertionOrder,
+1,cfactor = getChargeFactor[diagrams[[i]],{{{External[1],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},
+{{External[2],ex2},{AntiField[Internal[1]],in1},{Internal[3],in3}},
+{{Propagator,in4},{Internal[2],in2},{AntiField[Internal[3]],in3}},{{AntiField[Propagator],in4},{External[3],ex3},{External[4],ex4}}} /. diagrams[[i,2]]];,
+2,cfactor = getChargeFactor[diagrams[[i]],{{{External[1],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},
+{{External[3],ex3},{AntiField[Internal[1]],in1},{Internal[3],in3}},
+{{Propagator,in4},{Internal[2],in2},{AntiField[Internal[3]],in3}},{{AntiField[Propagator],in4},{External[2],ex2},{External[4],ex4}}} /. diagrams[[i,2]]];,
+3,cfactor = getChargeFactor[diagrams[[i]],{{{External[1],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},
+{{External[4],ex4},{AntiField[Internal[1]],in1},{Internal[3],in3}},
+{{Propagator,in4},{Internal[2],in2},{AntiField[Internal[3]],in3}},{{AntiField[Propagator],in4},{External[3],ex3},{External[2],ex2}}} /. diagrams[[i,2]]];,
+4,cfactor = getChargeFactor[diagrams[[i]],{{{External[1],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},
+{{External[2],ex2},{AntiField[Internal[1]],in1},{Internal[3],in3}},
+{{Propagator,in4},{Internal[2],in2},{AntiField[Internal[3]],in3}},{{AntiField[Propagator],in4},{External[1],ex3},{External[2],ex2}}} /. diagrams[[i,2]]];,
+5,cfactor =  getChargeFactor[diagrams[[i]],{{{External[2],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},
+{{External[4],ex4},{AntiField[Internal[1]],in1},{Internal[3],in3}},
+{{Propagator,in4},{Internal[2],in2},{AntiField[Internal[3]],in3}},{{AntiField[Propagator],in4},{External[1],ex2},{External[3],ex3}}} /. diagrams[[i,2]]];,
+6,cfactor =  getChargeFactor[diagrams[[i]],{{{External[2],ex2},{Internal[1],in1},{AntiField[Internal[2]],in2}},
+{{External[3],ex3},{AntiField[Internal[1]],in1},{Internal[3],in3}},
+{{Propagator,in4},{Internal[2],in2},{AntiField[Internal[3]],in3}},{{AntiField[Propagator],in4},{External[1],ex2},{External[4],ex4}}} /. diagrams[[i,2]]];
+]; *)
+cfactor = getChargeFactor[diagrams[[i]],{{{External[1],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},
+{{External[2],ex2},{AntiField[Internal[1]],in1},{Internal[3],in3}},
+{{Propagator,in4},{Internal[2],in2},{AntiField[Internal[3]],in3}},{{AntiField[Propagator],in4},{External[3],ex3},{External[4],ex4}}} /. diagrams[[i,2]]];, 
+
 cfactor = getChargeFactor[diagrams[[i]] /. {Cp[a__],Cp[b__],Cp[c__],Cp[d__]}->{Cp[a],Cp[b],Cp[c]},{{{External[1],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},
 {{External[2],ex2},{AntiField[Internal[1]],in1},{Internal[3],in3}},
 {{External[3],ex3},{Internal[2],in2},{AntiField[Internal[3]],in3}}} /. diagrams[[i,2]]];
@@ -428,11 +455,18 @@ CurrentInsertionOrder = InsertionOrder /. diagrams[[i,2]];
 (* Calculate the color factor of the particles in the loop *)
 
 If[nf===4,
+(* Switch[InsertionOrder/.diagrams[[i,2]],
+1|3|5|7|9|11, 
+cfactor = getChargeFactor[diagrams[[i]] /. {Cp[a__],Cp[b__],Cp[c__],Cp[d__]}\[Rule]{Cp[a],Cp[b]} /.(Internal[3]\[Rule]a_)\[Rule]in3\[Rule]a /. {External[3]\[Rule]NONE[3],External[4]\[Rule]NONE[4]} ,{{{External[1],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},{{Internal[3],ex2},{AntiField[Internal[1]],in1},{Internal[2],in2}}} /. diagrams[[i,2]]];, 
+2|4|6|8|10|12,
+cfactor = getChargeFactor[diagrams[[i]] /. {Cp[a__],Cp[b__],Cp[c__],Cp[d__]}\[Rule]{Cp[b],Cp[c]}/.(External[1]\[Rule]a_)\[Rule]EXT3\[Rule]a/.(Internal[3]\[Rule]a_):>(External[1]\[Rule]a) /. {External[3]\[Rule]NONE[3],External[4]\[Rule]NONE[4]},{{{Internal[3],ex1},{AntiField[Internal[1]],in1},{Internal[2],in2}},{{External[2],ex2},{Internal[1],in1},{AntiField[Internal[2]],in2}}} /. diagrams[[i,2]]]; 
+]; *)
+
 Switch[InsertionOrder/.diagrams[[i,2]],
 1|3|5|7|9|11, 
-cfactor = getChargeFactor[diagrams[[i]] /. {Cp[a__],Cp[b__],Cp[c__],Cp[d__]}->{Cp[a],Cp[b]} /.(Internal[3]->a_)->in3->a /. {External[3]->NONE[3],External[4]->NONE[4]} ,{{{External[1],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},{{Internal[3],ex2},{AntiField[Internal[1]],in1},{Internal[2],in2}}} /. diagrams[[i,2]]];, 
+cfactor = getChargeFactor[diagrams[[i]],{{{External[1],ex1},{Internal[1],in1},{AntiField[Internal[2]],in2}},{{Internal[3],in3},{AntiField[Internal[1]],in1},{Internal[2],in2}},{{AntiField[Internal[3]],in3},{External[2],ex2},{Propagator,in4}},{{External[3],ex3},{External[4],ex4},{AntiField[Propagator],in4}} } /. diagrams[[i,2]]];, 
 2|4|6|8|10|12,
-cfactor = getChargeFactor[diagrams[[i]] /. {Cp[a__],Cp[b__],Cp[c__],Cp[d__]}->{Cp[b],Cp[c]}/.(External[1]->a_)->EXT3->a/.(Internal[3]->a_):>(External[1]->a) /. {External[3]->NONE[3],External[4]->NONE[4]},{{{Internal[3],ex1},{AntiField[Internal[1]],in1},{Internal[2],in2}},{{External[2],ex2},{Internal[1],in1},{AntiField[Internal[2]],in2}}} /. diagrams[[i,2]]]; 
+cfactor = getChargeFactor[diagrams[[i]],{{{AntiField[Internal[3]],in3},{External[1],ex1},{Propagator,in4}},{{Internal[3],in3},{AntiField[Internal[1]],in1},{Internal[2],in2}},{{External[2],ex2},{Internal[1],in1},{AntiField[Internal[2]],in2}},{{External[3],ex3},{External[4],ex4},{AntiField[Propagator],in4}}} /. diagrams[[i,2]]]; 
 ];,
 Switch[InsertionOrder/.diagrams[[i,2]],
 1|3|5, 

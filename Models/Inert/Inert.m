@@ -50,8 +50,8 @@ NameOfStates={GaugeES, EWSB};
 
   		  
 DEFINITION[GaugeES][Additional]= {
-	{LagHC, {Overwrite->True, AddHC->True}},
-	{LagNoHC,{Overwrite->True, AddHC->False}}
+	{LagHC, {AddHC->True}},
+	{LagNoHC,{ AddHC->False}}
 };
 
 
@@ -86,7 +86,7 @@ DEFINITION[EWSB][VEVs]=
 
 
 DEFINITION[EWSB][MatterSector]= 
-{    {{conj[Hup],Hdm},{Hp,ZP}},
+{    {{Hup,conj[Hdm]},{Hp,ZP}},
      {{{dL}, {conj[dR]}}, {{DL,ZDL}, {DR,ZDR}}},
      {{{uL}, {conj[uR]}}, {{UL,ZUL}, {UR,ZUR}}},
      {{{eL}, {conj[eR]}}, {{EL,ZEL}, {ER,ZER}}}

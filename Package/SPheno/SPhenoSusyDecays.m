@@ -31,7 +31,7 @@ Particles[Current]=Particles[Eigenstates];
 MakeCouplingLists;
 
 
-$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+(* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 (* CreateDirectory[$sarahCurrentSPhenoDir]; *)
 sphenoDecay=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"SusyDecays_"<>ModelName<>".f90"]];
 
@@ -191,7 +191,7 @@ savedDecayInfos = Join[savedDecayInfos,{{particle,NeededCouplings,NeededMasses,F
 channels=CountNumberEntries[FullInformation];
 (*
 channels=0;
-For[i=1,i<=Length[FullInformation],
+For[i=1,i\[LessEqual]Length[FullInformation],
 channels += (1+getGenSPheno[FullInformation[[i,1]]]-getGenSPhenoStart[FullInformation[[i,1]]])*(1+getGenSPheno[FullInformation[[i,2]]]-getGenSPhenoStart[FullInformation[[i,2]]]);
 i++;];
 *)

@@ -262,7 +262,9 @@ BYbar[a_,b_,c_]:=(Plus@@(( ThThTaTaYM2[#[[1]],#[[2]],#[[3]]])&/@Permutations[{a,
 (* for 1-loop scalar mass, eq. (87) -  (89) *)
 Habfunc[a_,b_]:=((Yijk[pA,pB,a]Conj[Yijk[pB,pC,b]]+Yijk[pA,pB,b]Conj[Yijk[pB,pC,a]])Muij[pC,pD]Conj[Muij[pD,pA]]+(Conj[Yijk[pA,pB,a]]Yijk[pB,pC,b]+Conj[Yijk[pA,pB,b]]Yijk[pB,pC,a])Conj[Muij[pC,pD]]Muij[pD,pA]+Yijk[pA,pB,a] Conj[Muij[pB,pC]]Yijk[pC,pD,b] Conj[Muij[pD,pA]]+Muij[pA,pB]Conj[Yijk[pB,pC,a]]Muij[pC,pD] Conj[Yijk[pD,pA,b]] ); 
 
+(*
 Habfunc[a_,b_]:= (YcY[pA,pC,a,b]+YcY[pA,pC,b,a]) McM[pC,pA]+(cYY[pA,pC,a,b]+YcY[pA,pC,b,a])cMM[pC,pA]+YcM[pA,pC,a] YcM[pC,pA,b]+McY[pA,pC,a] McY[pC,pA,b];
+*)
 
 LamSfunc[a_,b_]:=Sum[ (SA`CasimirRGE[a,nr]Bij[a,b]+SA`CasimirRGE[b,nr]Bij[a,b]),{nr,1,Length[Gauge]}];
 LamYfunc[a_,b_]:=(Yijk[pA,pB,a] Conj[Yijk[pB,pA,pC]]Bij[pC,b]+Yijk[pA,pB,b] Conj[Yijk[pB,pA,pC]]Bij[pC,a]);
@@ -271,9 +273,19 @@ LamYfunc[a_,b_]:=(Yijk[pA,pB,a] Conj[Yijk[pB,pA,pC]]Bij[pC,b]+Yijk[pA,pB,b] Conj
 LamBar3func[a_,b_]:=Lijkl[a,b,pE,pF] Aijk[pE,pG,pL] Aijk[pF,pG,pL] + 2 Bij[pE,pF] Lijkl[a,pE,pG,pL] Lijkl[b,pF,pG,pL] + 2 Aijk[a,pE,pF] Aijk[pF,pG,pL] Lijkl[pB,pE,pG,pL] + 2 Aijk[b,pE,pF] Aijk[pF,pG,pL] Lijkl[a,pE,pG,pL];
 LamBar2Yfunc[a_,b_]:=Y2S[pF,pG](Bij[pE,pG] Lijkl[a,b,pE,pF]+ Aijk[a,pE,pF] Aijk[b,pE,pG]);
 
+(*
 HbarLamfunc[a_,b_]:=1/2 Lijkl[a,b,pE,pF] (McY[pO,pQ,pE] McY[pQ,pO,pF]+cMY[pO,pQ,pE]cMY[pQ,pO,pF])+Bij[pE,pF](YcYYcY[pO,pO,a,pE,b,pF]+cYYcYY[pO,pO,a,pE,b,pF])+ Aijk[a,pE,pF] (YcY[pO,pQ,b,pE]  McY[pQ,pO,pF]+cYY[pO,pQ,b,pE]  cMY[pQ,pO,pF])+Aijk[b,pE,pF](YcY[pO,pQ,a,pE] McY[pQ,pO,pF]+cYY[pO,pQ,a,pE] cMY[pQ,pO,pF]);
+*)
+HbarLamfunc[a_,b_]:=1/2 Lijkl[a,b,pE,pF] (Muij[pO,pX]Conj[Yijk[pX,pQ,pE] ] Muij[pQ,pY] Conj[Yijk[pY,pO,pF]]+Conj[Muij[pO,pX]]Yijk[pX,pQ,pE]  Conj[Muij[pQ,pY]] Yijk[pY,pO,pF])+Bij[pE,pF](YcYYcY[pO,pO,a,pE,b,pF]+cYYcYY[pO,pO,a,pE,b,pF])+ Aijk[a,pE,pF] (Yijk[pO,pX,b] Conj[Yijk[pX,pQ,pE]] Muij[pQ,pY] Conj[Yijk[pY,pO,pF]]+Conj[Yijk[pO,pX,b]] Yijk[pX,pQ,pE] Conj[Muij[pQ,pY]] Yijk[pY,pO,pF])+Aijk[b,pE,pF](Yijk[pO,pX,a] Conj[Yijk[pX,pQ,pE]] Muij[pQ,pY] Conj[Yijk[pY,pO,pF]]+Conj[Yijk[pO,pX,a]] Yijk[pX,pQ,pE] Conj[Muij[pQ,pY]] Yijk[pY,pO,pF]);
 
+(*
 HYfunc[a_,b_]:=2 (Y2F[pO,pP] cMM[pP,pR]+cMM[pO,pP] Y2F[pP,pR])(cYY[pR,pO,a,b] + cYY[pR,pO,b,a])+2(Y2F[pO,pP] cYM[pP,pR,a](cYM[pR,pO,b]+  cMY[pR,pO,b])+Y2F[pO,pP]  cMY[pP,pR,a](cYM[pR,pO,b]  +cMY[pR,pO,b])+ Y2F[pO,pP] cYM[pP,pR,b](cYM[pR,pO,a]+  cMY[pR,pO,a])+Y2F[pO,pP]  cMY[pP,pR,b](cYM[pR,pO,a]+  cMY[pR,pO,a]));
+*)
+HYfunc[a_,b_]:=2(Conj[Yijk[pO,pA,pB]] Yijk[pA,pP,pB] Conj[Muij[pP,pQ]]Muij[pQ,pR]+Conj[Muij[pO,pQ]]Muij[pQ,pP]Conj[Yijk[pP,pX,pY]] Yijk[pX,pR,pY])(Conj[Yijk[pR,pA1,a]] Yijk[pA1,pO,b]+Conj[Yijk[pR,pA1,b]] Yijk[pA1,pO,a])+
+2( Conj[Yijk[pO,pA,pB]] Yijk[pA,pP,pB] Conj[Yijk[pP,pA1,a]] Muij[pA1,pR] (Conj[Yijk[pR,pX,b]]Muij[pX,pO]+Conj[Muij[pR,pX]] Yijk[pX,pO,b])+
+Conj[Yijk[pO,pA,pB]] Yijk[pA,pP,pB] Conj[Muij[pP,pA1]] Yijk[pA1,pR,a](Conj[Yijk[pR,pX,b]]Muij[pX,pO]+Conj[Muij[pR,pX]] Yijk[pX,pO,b])+
+Conj[Yijk[pO,pA,pB]] Yijk[pA,pP,pB] Conj[Yijk[pP,pA1,b]] Muij[pA1,pR] (Conj[Yijk[pR,pX,a]]Muij[pX,pO]+Conj[Muij[pR,pX]] Yijk[pX,pO,a])+
+Conj[Yijk[pO,pA,pB]] Yijk[pA,pP,pB] Conj[Muij[pP,pA1]] Yijk[pA1,pR,b](Conj[Yijk[pR,pX,a]]Muij[pX,pO]+Conj[Muij[pR,pX]] Yijk[pX,pO,a]));
 
 HYbarfunc[a_,b_]:=Block[{temp},
 temp=(Yijk[pO,pP,pE] Conj[Yijk[pP,pR,a]] Yijk[pR,pS,pE] Conj[Yijk[pS,pQ,b]]+Yijk[pO,pP,pE] Conj[Yijk[pP,pR,b]] Yijk[pR,pS,pE] Conj[Yijk[pS,pQ,a]])Muij[pQ,pX]Conj[Muij[pX,pO]]+Yijk[pO,pP,pE] Conj[Muij[pP,pQ]] Yijk[pQ,pR,pE] Conj[Muij[pR,pS]](Yijk[pS,pT,a] Conj[Yijk[pT,pO,b]]+Yijk[pS,pT,b] Conj[Yijk[pT,pO,a]])+Yijk[pO,pP,pE] Conj[Yijk[pP,pQ,a]] Yijk[pQ,pR,pE] Conj[Muij[pR,pS]](Yijk[pS,pT,b] Conj[Muij[pT,pO]]+Muij[pS,pT] Conj[Yijk[pT,pO,b]])+
@@ -349,12 +361,12 @@ For[il=1,il<=Length[list2b],
 list2b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],a_]=0;
 il++;];
 (*
-For[il=1,il<=Length[list4b],
+For[il=1,il\[LessEqual]Length[list4b],
 list4b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],a_, vecB_]=0;
 il++;]; *)
 For[k=1,k<=Length[Gauge],
 For[il=1,il<=Length[list4b],
-list4b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],k, vecB_]=(ExpandTermNS[list4b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2],getFullNS[PART[S][[i3]]]/. subGC[3],getFullNS[PART[S][[i4]]]/. subGC[4],k,vecB]](*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}]*)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0});
+list4b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],k, vecB_]=(ExpandTermNS[list4b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2],getFullNS[PART[S][[i3]]]/. subGC[3],getFullNS[PART[S][[i4]]]/. subGC[4],k,vecB]](*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}]*)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0});
 il++;];
 k++;];
 For[il=1,il<=Length[list3b],
@@ -362,21 +374,21 @@ list3b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/
 il++;];,
 
 For[il=1,il<=Length[list1b],
-list1b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4]]=(ExpandTermNS[list1b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2],getFullNS[PART[S][[i3]]]/. subGC[3],getFullNS[PART[S][[i4]]]/. subGC[4] ]](*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}] *)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0});
+list1b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4]]=(ExpandTermNS[list1b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2],getFullNS[PART[S][[i3]]]/. subGC[3],getFullNS[PART[S][[i4]]]/. subGC[4] ]](*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}] *)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0});
 il++;];
 For[il=1,il<=Length[list1NE],
 list1NE[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4]]=(list1NE[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2],getFullNS[PART[S][[i3]]]/. subGC[3],getFullNS[PART[S][[i4]]]/. subGC[4]]);
 il++;];
 For[k=1,k<=Length[Gauge],
 For[il=1,il<=Length[list2b],
-list2b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],k]=(ExpandTermNS[list2b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2],getFullNS[PART[S][[i3]]]/. subGC[3],getFullNS[PART[S][[i4]]]/. subGC[4],k ]](*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}]*) /. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0});
+list2b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],k]=(ExpandTermNS[list2b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2],getFullNS[PART[S][[i3]]]/. subGC[3],getFullNS[PART[S][[i4]]]/. subGC[4],k ]](*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}]*) /. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0});
 il++;];
 For[il=1,il<=Length[list4b],
-list4b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],k, vecB_]=(ExpandTermNS[list4b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2],getFullNS[PART[S][[i3]]]/. subGC[3],getFullNS[PART[S][[i4]]]/. subGC[4],k,vecB]](*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}]*)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0});
+list4b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],k, vecB_]=(ExpandTermNS[list4b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2],getFullNS[PART[S][[i3]]]/. subGC[3],getFullNS[PART[S][[i4]]]/. subGC[4],k,vecB]](*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}]*)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0});
 il++;];
 For[k2=1,k2<=Length[Gauge],
 For[il=1,il<=Length[list3b],
-list3b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],k, k2]=(ExpandTermNS[list3b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2],getFullNS[PART[S][[i3]]]/. subGC[3],getFullNS[PART[S][[i4]]]/. subGC[4],k,k2]](*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}] *)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0});
+list3b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],k, k2]=(ExpandTermNS[list3b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2],getFullNS[PART[S][[i3]]]/. subGC[3],getFullNS[PART[S][[i4]]]/. subGC[4],k,k2]](*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}] *)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0});
 il++;];
 k2++;];
 k++;];
@@ -498,7 +510,7 @@ il++;];
 k2++;];
 k++;];,
 For[il=1,il<=Length[list1b],
-list1b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2]]=(ExpandTermNS[list1b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2]]](*//. (sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}] *)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0} );
+list1b[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2]]=(ExpandTermNS[list1b[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2]]](*//. (sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}] *)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0} );
 il++;];
 For[il=1,il<=Length[list1bNE],
 list1bNE[[il,1]][getFullNS[PART[S][[i1]]]/. subGCRule[1],getFullNS[PART[S][[i2]]]/. subGCRule[2]]=(list1bNE[[il,2]][getFullNS[PART[S][[i1]]]/. subGC[1],getFullNS[PART[S][[i2]]]/. subGC[2]]);
@@ -527,14 +539,14 @@ list3b=Table[{list3in[[i]],ToExpression[ToString[list3in[[i]]]<>"func"]},{i,1,Le
 For[i1=1,i1<=Length[PARTALL[F]],
 For[i2=1,i2<=Length[PARTALL[F]],
 For[il=1,il<=Length[list1b],
-list1b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2]]=ExpandTermNS[list1b[[il,2]][getFullNS[PARTALL[F][[i1]]]/. subGC[1],getFullNS[PARTALL[F][[i2]]]/. subGC[2]]](*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}]*) /. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0};
+list1b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2]]=ExpandTermNS[list1b[[il,2]][getFullNS[PARTALL[F][[i1]]]/. subGC[1],getFullNS[PARTALL[F][[i2]]]/. subGC[2]]](*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}]*) /. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0};
 il++;];
 For[k=1,k<=Length[Gauge],
 For[il=1,il<=Length[list2b],
-list2b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2],k]=ExpandTermNS[list2b[[il,2]][getFullNS[PARTALL[F][[i1]]]/. subGC[1],getFullNS[PARTALL[F][[i2]]]/. subGC[2],k ]](*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}]*) /. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0};
+list2b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2],k]=ExpandTermNS[list2b[[il,2]][getFullNS[PARTALL[F][[i1]]]/. subGC[1],getFullNS[PARTALL[F][[i2]]]/. subGC[2],k ]](*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}]*) /. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0};
 il++;];
 For[il=1,il<=Length[list3b],
-list3b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2],k, vecB_]=ExpandTermNS[list3b[[il,2]][getFullNS[PARTALL[F][[i1]]]/. subGC[1],getFullNS[PARTALL[F][[i2]]]/. subGC[2],k,vecB]] (*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}]*)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0};
+list3b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2],k, vecB_]=ExpandTermNS[list3b[[il,2]][getFullNS[PARTALL[F][[i1]]]/. subGC[1],getFullNS[PARTALL[F][[i2]]]/. subGC[2],k,vecB]] (*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}]*)/. {Yijk[a__]->0,Aijk[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0};
 il++;];
 k++;];
 i2++;];
@@ -547,7 +559,7 @@ For[i1=1,i1<=Length[PARTALL[F]],
 For[i2=1,i2<=Length[PARTALL[F]],
 For[i3=1,i3<=Length[PART[S]],
 For[il=1,il<=Length[list1b],
-list1b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2],PART[S][[i3]]/. subGCRule[3]]=ExpandTermNS[list1b[[il,2]][PARTALL[F][[i1]]/. subGC[1],PARTALL[F][[i2]]/. subGC[2],PART[S][[i3]]/. subGC[3]]]/. {Yijk[a__]->0,Aijk[a__]->0,m2ij[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0}(*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}]*) ;
+list1b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2],PART[S][[i3]]/. subGCRule[3]]=ExpandTermNS[list1b[[il,2]][PARTALL[F][[i1]]/. subGC[1],PARTALL[F][[i2]]/. subGC[2],PART[S][[i3]]/. subGC[3]]]/. {Yijk[a__]->0,Aijk[a__]->0,m2ij[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0}(*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}]*) ;
 il++;];
 i3++;];
 i2++;];
@@ -560,7 +572,7 @@ For[i2=1,i2<=Length[PARTALL[F]],
 For[i3=1,i3<=Length[PART[S]],
 For[i4=1,i4<=Length[PART[S]],
 For[il=1,il<=Length[list1b],
-list1b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2],PART[S][[i3]]/. subGCRule[3],PART[S][[i4]]/. subGCRule[4]]=ExpandTermNS[list1b[[il,2]][PARTALL[F][[i1]]/. subGC[1],PARTALL[F][[i2]]/. subGC[2],PART[S][[i3]]/. subGC[3],PART[S][[i4]]/. subGC[4]]]/. {Yijk[a__]->0,Aijk[a__]->0,m2ij[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0}(*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}]*);
+list1b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2],PART[S][[i3]]/. subGCRule[3],PART[S][[i4]]/. subGCRule[4]]=ExpandTermNS[list1b[[il,2]][PARTALL[F][[i1]]/. subGC[1],PARTALL[F][[i2]]/. subGC[2],PART[S][[i3]]/. subGC[3],PART[S][[i4]]/. subGC[4]]]/. {Yijk[a__]->0,Aijk[a__]->0,m2ij[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0}(*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}]*);
 il++;];
 i4++;];
 i3++;];
@@ -575,7 +587,7 @@ For[i3=1,i3<=Length[PART[S]],
 For[i4=1,i4<=Length[PART[S]],
 For[i5=1,i5<=Length[PART[S]],
 For[il=1,il<=Length[list1b],
-list1b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2],PART[S][[i3]]/. subGCRule[3],PART[S][[i4]]/. subGCRule[4],PART[S][[i5]]/. subGCRule[5]]=ExpandTermNS[list1b[[il,2]][PARTALL[F][[i1]]/. subGC[1],PARTALL[F][[i2]]/. subGC[2],PART[S][[i3]]/. subGC[3],PART[S][[i4]]/. subGC[4],PART[S][[i5]]/. subGC[5]]]/. {Yijk[a__]->0,Aijk[a__]->0,m2ij[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0}(*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}]*) ;
+list1b[[il,1]][PARTALL[F][[i1]]/. subGCRule[1],PARTALL[F][[i2]]/. subGCRule[2],PART[S][[i3]]/. subGCRule[3],PART[S][[i4]]/. subGCRule[4],PART[S][[i5]]/. subGCRule[5]]=ExpandTermNS[list1b[[il,2]][PARTALL[F][[i1]]/. subGC[1],PARTALL[F][[i2]]/. subGC[2],PART[S][[i3]]/. subGC[3],PART[S][[i4]]/. subGC[4],PART[S][[i5]]/. subGC[5]]]/. {Yijk[a__]->0,Aijk[a__]->0,m2ij[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0}(*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}]*) ;
 il++;];
 i5++;];
 i4++;];
@@ -592,7 +604,7 @@ For[i4=1,i4<=Length[PART[S]],
 For[i5=1,i5<=Length[PART[S]],
 For[i6=1,i6<=Length[PART[S]],
 For[il=1,il<=Length[list1b],
-list1b[[il,1]][getFullNS[PARTALL[F][[i1]]]/. subGCRule[1],getFullNS[PARTALL[F][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],getFullNS[PART[S][[i5]]]/. subGCRule[5],getFullNS[PART[S][[i6]]]/. subGCRule[6]]=ExpandTermNS[list1b[[il,2]][PARTALL[F][[i1]]/. subGC[1],PARTALL[F][[i2]]/. subGC[2],PART[S][[i3]]/. subGC[3],PART[S][[i4]]/. subGC[4],PART[S][[i5]]/. subGC[5],PART[S][[i6]]/. subGC[6]]]/. {Yijk[a__]->0,Aijk[a__]->0,m2ij[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0}(*//. sum[a_,b_,c_] d_ :>Sum[d,{a,b,c}] *);
+list1b[[il,1]][getFullNS[PARTALL[F][[i1]]]/. subGCRule[1],getFullNS[PARTALL[F][[i2]]]/. subGCRule[2],getFullNS[PART[S][[i3]]]/. subGCRule[3],getFullNS[PART[S][[i4]]]/. subGCRule[4],getFullNS[PART[S][[i5]]]/. subGCRule[5],getFullNS[PART[S][[i6]]]/. subGCRule[6]]=ExpandTermNS[list1b[[il,2]][PARTALL[F][[i1]]/. subGC[1],PARTALL[F][[i2]]/. subGC[2],PART[S][[i3]]/. subGC[3],PART[S][[i4]]/. subGC[4],PART[S][[i5]]/. subGC[5],PART[S][[i6]]/. subGC[6]]]/. {Yijk[a__]->0,Aijk[a__]->0,m2ij[a__]->0, Muij[a__]->0, Bij[a__]->0, LSi->0 /. Li->0}(*//. sum[a_,b_,c_] d_ \[RuleDelayed]Sum[d,{a,b,c}] *);
 il++;];
 i6++;];
 i5++;];

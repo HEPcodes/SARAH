@@ -157,7 +157,7 @@ WriteString[filenames[[l]],"550 1.              # Calculate Fine-Tuning \n"];
 
 If[FlagLoopContributions===True,
 For[i=1,i<=Length[PART[F]],
-WriteString[sphenoInOut,"Case("<>ToString[1100+i]<>") \n"];
+(* WriteString[sphenoInOut,"Case("<>ToString[1100+i]<>") \n"]; *) (* REMOVED 03/05/15 *)
 WriteString[filenames[[l]],ToString[1100+i]<>" 1             # Include "<>SPhenoForm[PART[F][[i,1]]]<>" in 1.loop corrections \n"];
 i++;];
 

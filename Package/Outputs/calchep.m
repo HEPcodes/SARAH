@@ -32,7 +32,7 @@ MakeCHep[opt___ ]:=MakeCalcHepOutput[FeynmanGauge/.{opt}/.Options[MakeCHep],CPVi
 
 MakeCalcHepOutput[FeynmanGauge_,CPViolation_,ModelNr_, CompHep_,NoSplitWith_,NoSplitOnly_, RunningCoup_, SLHA_, WriteMO_, CalcMM_,RunSPhenoCH_,effHiggsV_,DMc1_,DMc2_]:=Block[{startedtime},
 startedtime=TimeUsed[];
-(*If[FreeQ[NameOfStates,InitalizedVertexCalculaton]\[Equal]True,
+(*If[FreeQ[NameOfStates,InitalizedVertexCalculaton]==True,
 Message[ModelFile::NoVertices];,
 *)
 
@@ -84,7 +84,7 @@ parDep=Select[parDep,(FreeQ[parNum,#])&];
 subNumLeft=Select[subNumDependences,(FreeQ[#,Integer])&];
 subNumLeft = Select[Table[subNumLeft[[i,2]],{i,1,Length[subNumLeft]}],(FreeQ[#,Integer])&];
 
-parDep=Select[parDep,(FreeQ[VertexListNonCC,#]==False || FreeQ[subNumLeft,#]==False)&];
+parDep=Select[parDep,(FreeQ[VertexListNonCC,#]==False || FreeQ[subNumLeft,#]==False || Head[#]===Mass)&];
 
 If[RunningCoup==True, 
 parNum=DeleteCases[parNum,strongCoupling]; 
@@ -119,7 +119,7 @@ WriteEXTLib[ModelNr];
 ];
 
 If[WriteMO,
-WriteCalcOmegaMO;
+WriteCalcOmegaMO[TrueQ[DMc2=!=None]];
 ];
 
 
@@ -164,10 +164,10 @@ varsFile = OpenWrite[ToFileName[$sarahCurrentCalcHepDir,"vars"<>ToString[ModelNr
 
 If[UsePDGIX===True,
 columnWidthsParticles = {10, 5,5,10,6,6,6,5,3,20,20};
-lN=10; lP=5; lNr=10; lS=6;lM=6; lW=6; lC=5; lA=3; lL=20;
+lN=10; lP=8; lNr=10; lS=6;lM=6; lW=6; lC=5; lA=3; lL=20;
 lVN=20; lVV=20; lVC=20; ,
 columnWidthsParticles = {10, 5,5,8,6,6,6,5,3,20,20};
-lN=10; lP=5; lNr=8; lS=6;lM=6; lW=6; lC=5; lA=3; lL=20;
+lN=10; lP=8; lNr=8; lS=6;lM=6; lW=6; lC=5; lA=3; lL=20;
 lVN=20; lVV=20; lVC=20; 
 ];
 columnWidthsVars =  {10,20,20};
@@ -178,7 +178,7 @@ Minutes=If[Date[][[5]]<10,"0"<>ToString[Date[][[5]]],ToString[Date[][[5]]]];
 WriteString[particlesFile, ModelName <> "  % Created by SARAH v"<>SA`Version<>" (arXiv:0806.0538, 0909.2863, 1002.0840, 1207.0906, 1309.7223) at "<>ToString[Date[][[4]]]<>":"<>Minutes<>" on "<>ToString[Date[][[3]]]<>"."<>ToString[Date[][[2]]]<>"."<>ToString[Date[][[1]]]<>"  \n"];
 WriteString[particlesFile, "Particles  \n"];
 
-WriteString[particlesFile, "Full name |A    |A+   |"];
+WriteString[particlesFile, "Full name |A       |A+      |"];
 If[CompHep==False,
 If[UsePDGIX===True,WriteString[particlesFile,  " number   "];,WriteString[particlesFile,  " number "];];
 WriteString[particlesFile,  "|"];
@@ -409,17 +409,19 @@ lagrangeFile = OpenWrite[ToFileName[$sarahCurrentCalcHepDir,"lgrng"<>ToString[Mo
 funcFile = OpenWrite[ToFileName[$sarahCurrentCalcHepDir,"func"<>ToString[ModelNr]<>".mdl"]];
 
 
-columnWidthsLagrange = {6, 5,5,5,10,45};
+(* columnWidthsLagrange = {6, 5,5,5,10,45}; *)
+columnWidthsLagrange = {9, 8,8,8,10,45};
 columnWidthsFunc =  {12,100};
 
-lP=5; lF=40; lFF=15;
+(* lP=5; *)lP=8; lF=40; lFF=15;
 
 Minutes=If[Date[][[5]]<10,"0"<>ToString[Date[][[5]]],ToString[Date[][[5]]]];
 (* WriteString[lagrangeFile, StringDrop[Modelname,-2]<>": "<> modelName <> "\n"]; *)
 WriteString[lagrangeFile, ModelName <> "  % Created by SARAH v"<>SA`Version<>" (arXiv:0806.0538, 0909.2863, 1002.0840, 1207.0906, 1309.7223) at "<>ToString[Date[][[4]]]<>":"<>Minutes<>" on "<>ToString[Date[][[3]]]<>"."<>ToString[Date[][[2]]]<>"."<>ToString[Date[][[1]]]<>"\n"];
 If[CompHep==False,
 WriteString[lagrangeFile, "Vertices  \n"];
-WriteString[lagrangeFile, "  A1  | A2  | A3  | A4  |"];
+(* WriteString[lagrangeFile, "  A1  | A2  | A3  | A4  |"]; *)
+WriteString[lagrangeFile, "  A1     | A2     | A3     | A4     |"];
 WriteString[lagrangeFile,InsString["> Factor ",lF-1]];
 WriteString[lagrangeFile,"<|"];
 WriteString[lagrangeFile, "> Lorentz part                                                                                             <|\n"];
@@ -490,7 +492,7 @@ WriteVerticesCHep4[SA`VertexList[SSVV],CPViolation,FeynmanGauge, SSVV,NoSplitWit
 WriteString[lagrangeFile," "];
 WriteString[lagrangeFile,InsString[CalcHepName[VG,1,1],lP]<>"|"];
 WriteString[lagrangeFile,InsString[CalcHepName[VG,1,1],lP]<>"|"];
-WriteString[lagrangeFile,InsString[CalcHepName[VG,1,1]<>".t",lP]<>"|     |"];
+WriteString[lagrangeFile,InsString[CalcHepName[VG,1,1]<>".t",lP]<>"|        |"];
 WriteString[lagrangeFile,InsString["g3/sqrt2",lF]];
 WriteString[lagrangeFile,"|m1.M3*m2.m3-m1.m3*m2.M3 \n"];
 
@@ -580,14 +582,14 @@ For[fiter1=1,fiter1<=getFla[PART[S][[i,1]]],
 WriteString[lagrangeFile," "];
 WriteString[lagrangeFile,InsString[CalcHepName[PART[S][[i,1]],iter1,fiter1],lP]<>"|"];
 WriteString[lagrangeFile,InsString[CHepName[VG,1,1],lP]<>"|"];
-WriteString[lagrangeFile,InsString[CalcHepName[conj[partGA[[i,1]]],iter1,fiter1],lP]<>"|     |"];
+WriteString[lagrangeFile,InsString[CalcHepName[conj[partGA[[i,1]]],iter1,fiter1],lP]<>"|        |"];
 WriteString[lagrangeFile,InsString["i*Maux*g3",lF]];
 WriteString[lagrangeFile,"| m2.m3 \n"];
 
 WriteString[lagrangeFile," "];
 WriteString[lagrangeFile,InsString[CalcHepName[conj[PART[S][[i,1]]],iter1,fiter1],lP]<>"|"];
 WriteString[lagrangeFile,InsString[CHepName[VG,1,1],lP]<>"|"];
-WriteString[lagrangeFile,InsString[CalcHepName[partGA[[i,1]],iter1,fiter1],lP]<>"|     |"];
+WriteString[lagrangeFile,InsString[CalcHepName[partGA[[i,1]],iter1,fiter1],lP]<>"|        |"];
 WriteString[lagrangeFile,InsString["i*Maux*g3",lF]];
 WriteString[lagrangeFile,"| m2.m3 \n"];
 fiter1++;];
@@ -604,7 +606,7 @@ For[fiter1=1,fiter1<=getFla[HiggsBoson],
 WriteString[lagrangeFile," "];
 WriteString[lagrangeFile,InsString[CalcHepName[HiggsBoson,iter1,fiter1],lP]<>"|"];
 WriteString[lagrangeFile,InsString[CHepName[VectorP,1,1],lP]<>"|"];
-WriteString[lagrangeFile,InsString[CalcHepName[VectorP,1,1],lP]<>"|     |"];
+WriteString[lagrangeFile,InsString[CalcHepName[VectorP,1,1],lP]<>"|        |"];
 If[getFla[HiggsBoson]>1,
 WriteString[lagrangeFile,InsString["HPP"<>ToString[iter1]<>ToString[fiter1],lF]];,
 WriteString[lagrangeFile,InsString["HPP"<>ToString[iter1],lF]];
@@ -614,7 +616,7 @@ WriteString[lagrangeFile,"| (p2.p3*m2.m3-p2.m3*p3.m2) \n"];
 WriteString[lagrangeFile," "];
 WriteString[lagrangeFile,InsString[CalcHepName[HiggsBoson,iter1,fiter1],lP]<>"|"];
 WriteString[lagrangeFile,InsString[CHepName[VectorG,1,1],lP]<>"|"];
-WriteString[lagrangeFile,InsString[CalcHepName[VectorG,1,1],lP]<>"|     |"];
+WriteString[lagrangeFile,InsString[CalcHepName[VectorG,1,1],lP]<>"|        |"];
 If[getFla[HiggsBoson]>1,
 WriteString[lagrangeFile,InsString["HGG"<>ToString[iter1]<>ToString[fiter1],lF]];,
 WriteString[lagrangeFile,InsString["HGG"<>ToString[iter1],lF]];
@@ -631,7 +633,7 @@ For[fiter1=1,fiter1<=getFla[PseudoScalar],
 WriteString[lagrangeFile," "];
 WriteString[lagrangeFile,InsString[CalcHepName[PseudoScalar,iter1,fiter1],lP]<>"|"];
 WriteString[lagrangeFile,InsString[CHepName[VectorP,1,1],lP]<>"|"];
-WriteString[lagrangeFile,InsString[CalcHepName[VectorP,1,1],lP]<>"|     |"];
+WriteString[lagrangeFile,InsString[CalcHepName[VectorP,1,1],lP]<>"|        |"];
 If[getFla[PseudoScalar]>1,
 WriteString[lagrangeFile,InsString["APP"<>ToString[iter1]<>ToString[fiter1],lF]];,
 WriteString[lagrangeFile,InsString["APP"<>ToString[iter1],lF]];
@@ -641,7 +643,7 @@ WriteString[lagrangeFile,"| (p2.p3*m2.m3-p2.m3*p3.m2) \n"];
 WriteString[lagrangeFile," "];
 WriteString[lagrangeFile,InsString[CalcHepName[PseudoScalar,iter1,fiter1],lP]<>"|"];
 WriteString[lagrangeFile,InsString[CHepName[VectorG,1,1],lP]<>"|"];
-WriteString[lagrangeFile,InsString[CalcHepName[VectorG,1,1],lP]<>"|     |"];
+WriteString[lagrangeFile,InsString[CalcHepName[VectorG,1,1],lP]<>"|        |"];
 If[getFla[PseudoScalar]>1,
 WriteString[lagrangeFile,InsString["AGG"<>ToString[iter1]<>ToString[fiter1],lF]];,
 WriteString[lagrangeFile,InsString["AGG"<>ToString[iter1],lF]];
@@ -654,7 +656,7 @@ iter1++;];
 ];
 
 (*
-For[i=1,i\[LessEqual]Length[CalcHepParticlesM0],
+For[i=1,i<=Length[CalcHepParticlesM0],
 WriteString[funcFile];
 WriteString[funcFile,InsString[CalcHepParticlesM0[[i,3]],lFF]<>"|"];
 WriteString[funcFile,"aWidth(\""<>CalcHepParticlesM0[[i,4]]<>"\") \n"];
@@ -1278,10 +1280,10 @@ nameStringAdj = nameString[[2]];
 nameString=nameString[[1]];
 ];
 
-(* If[CompHep\[Equal]True, *)
+(* If[CompHep==True, *)
 LettersToAdd=0;
 (*
-If[(RParity /. pList[[i,2]])\[Equal]-1, LettersToAdd++;];
+If[(RParity /. pList[[i,2]])==-1, LettersToAdd++;];
 *)
 
 If[DMc1===Default,
@@ -1302,7 +1304,7 @@ nameString=StringTake[nameString,{1,maxStringLengthName-LettersToAdd}];
 If[AntiFieldGiven=!=True,
 nameAdj = If[SelfAdjQ[name]==True,nameStringAdj=nameString;,nameStringAdj =SwitchCase[nameString];];
 ];
-(*If[(RParity /. pList[[i,2]])\[Equal]-1,nameStringAdj=StringJoin["~",nameStringAdj]; nameString=StringJoin["~",nameString];]; *)
+(*If[(RParity /. pList[[i,2]])==-1,nameStringAdj=StringJoin["~",nameStringAdj]; nameString=StringJoin["~",nameString];]; *)
 If[DMc1===Default,
 If[getRParity[ pList[[i,1]],ToExpression[modelName]]==-1,nameStringAdj=StringJoin["~",nameStringAdj]; nameString=StringJoin["~",nameString];];,
 If[getSecondParity[ pList[[i,1]],ToExpression[modelName],DMc1[[1]]]==DMc1[[2]],nameStringAdj=StringJoin["~",nameStringAdj]; nameString=StringJoin["~",nameString];];
@@ -1338,9 +1340,9 @@ nameStringAdj = nameString[[2]];
 nameString=nameString[[1]];
 ];
 
-(* If[CompHep\[Equal]True, *)
+(* If[CompHep==True, *)
 LettersToAdd=1;
-(*If[(RParity /. pList[[i,2]])\[Equal]-1, LettersToAdd++;]; *)
+(*If[(RParity /. pList[[i,2]])==-1, LettersToAdd++;]; *)
 If[getRParity[ pList[[i,1]],ToExpression[modelName]]==-1, LettersToAdd++;];
 If[StringLength[nameString]+LettersToAdd >maxStringLengthName,
 Message[CHep::ParticleNameLength,pList[[i,1]]];
@@ -1359,8 +1361,15 @@ nameStringAdj = nameStringAdj <>ToString[j]<>ToString[l];,
 nameStringAdj = nameStringAdj <>ToString[j];
 ];
 ];
-(* If[(RParity /. pList[[i,2]])\[Equal]-1,nameStringAdj=StringJoin["~",nameStringAdj]; nameString=StringJoin["~",nameString];]; *)
-If[getRParity[pList[[i,1]],ToExpression[modelName]]==-1,nameStringAdj=StringJoin["~",nameStringAdj]; nameString=StringJoin["~",nameString];];
+(* If[(RParity /. pList[[i,2]])==-1,nameStringAdj=StringJoin["~",nameStringAdj]; nameString=StringJoin["~",nameString];]; *)
+(* If[getRParity[pList[[i,1]],ToExpression[modelName]]==-1,nameStringAdj=StringJoin["~",nameStringAdj]; nameString=StringJoin["~",nameString];]; *)
+If[DMc1===Default,
+If[getRParity[ pList[[i,1]],ToExpression[modelName]]==-1,nameStringAdj=StringJoin["~",nameStringAdj]; nameString=StringJoin["~",nameString];];,
+If[getSecondParity[ pList[[i,1]],ToExpression[modelName],DMc1[[1]]]==DMc1[[2]],nameStringAdj=StringJoin["~",nameStringAdj]; nameString=StringJoin["~",nameString];];
+];
+If[DMc2=!=None,
+If[getSecondParity[ pList[[i,1]],ToExpression[modelName],DMc2[[1]]]==DMc2[[2]],nameStringAdj=StringJoin["~~",nameStringAdj]; nameString=StringJoin["~~",nameString];];
+];
 If[UsePDGIX===True,
 pdg = PDG.IX /. pList[[i,2]];,
 pdg = PDG /. pList[[i,2]];
@@ -1605,7 +1614,7 @@ CHForm[valueSplitted, facName];
 WriteString[lagrangeFile," "];
 WriteString[lagrangeFile,InsString[CHepName[particle1,iter1,fiter1],lP]<>"|"];
 WriteString[lagrangeFile,InsString[CHepName[particle2,iter2,fiter2],lP]<>"|"];
-WriteString[lagrangeFile,InsString[CHepName[particle3,iter3,fiter3],lP]<>"|     |"];
+WriteString[lagrangeFile,InsString[CHepName[particle3,iter3,fiter3],lP]<>"|        |"];
 
 If[type===FFS || type===FFV,
 If[type===FFV,fac="G(m3)*";,fac="";];
@@ -1689,7 +1698,7 @@ DeleteSpace[string_]:=StringReplace[string,{" " ->""}];
 
 WriteCHepParticles[list_, CompHep_, WriteOut_,SLHA_,CalcMM_]:=Block[{i,j,k,name,nameC},
 For[i=1,i<=Length[list],
-For[j=1,j<=getGen[list[[i,1]]],(* For[j=1,j\[LessEqual]getGenOne[list[[i,1]]], *)
+For[j=1,j<=getGen[list[[i,1]]],(* For[j=1,j<=getGenOne[list[[i,1]]], *)
 For[k=1,k<=getFla[list[[i,1]]],
 name=CalcHepName[list[[i,1]],j,k];
 nameC=CalcHepName[AntiField[list[[i,1]]],j,k];
@@ -1782,8 +1791,8 @@ WriteString[particlesFile," 0    |"];
 ];
 
 (*
-If[FreeQ[getIndizes[list[[i,1]]],color]\[Equal]True,
-If[FreeQ[ColoredGaugeParticles,list[[i,1]]]\[Equal]True,
+If[FreeQ[getIndizes[list[[i,1]]],color]==True,
+If[FreeQ[ColoredGaugeParticles,list[[i,1]]]==True,
 WriteString[particlesFile,"1    |"];,
 WriteString[particlesFile,"8    |"]
 ];,
@@ -2148,12 +2157,16 @@ parDepNeeded = Intersection[parDepNeeded] /. subMassTempRe;
 
 
 
-WriteCalcOmegaMO:=Block[{MOfile},
+WriteCalcOmegaMO[TwoDM_]:=Block[{MOfile},
 Print["Write main file for MicrOmegas"];
 MOfile= OpenWrite[ToFileName[$sarahCurrentCalcHepDir,"CalcOmega.cpp"]];
+If[TwoDM===True,
+AppendSourceCode["CalcOmega2.cpp",MOfile];,
 AppendSourceCode["CalcOmega.cpp",MOfile];
+];
 Close[MOfile];
 
+If[TwoDM=!=True,
 MOfile= OpenWrite[ToFileName[$sarahCurrentCalcHepDir,"CalcOmega_with_DDetection_old.cpp"]];
 AppendSourceCode["CalcOmega_with_DDetection.cpp",MOfile];
 Close[MOfile];
@@ -2161,6 +2174,7 @@ Close[MOfile];
 MOfile= OpenWrite[ToFileName[$sarahCurrentCalcHepDir,"CalcOmega_with_DDetection.cpp"]];
 AppendSourceCode["CalcOmega_with_DDetection_MO4.cpp",MOfile];
 Close[MOfile];
+];
 ];
 
 GenerateMicrOmegasLesHouches[Eigenstates_,CPViolation_]:=Block[{i,j,k},

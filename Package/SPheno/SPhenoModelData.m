@@ -596,7 +596,7 @@ WriteString[ModelData,SPhenoForm[SPhenoWidthBR[[i]]]<>" = 0._dp \n"];
 i++;];
 
 (*
-For[i=1,i\[LessEqual]Length[ListOfLowEnergyNames],
+For[i=1,i<=Length[ListOfLowEnergyNames],
 WriteString[ModelData,ToString[ListOfLowEnergyNames[[i]]]<>" = 0._dp \n"];
 i++;];
 *)
@@ -745,7 +745,7 @@ If[Head[BoundaryLowScaleInput[[1,1]]]===List,
 temp=Join[temp,Table[Transpose[BoundaryLowScaleInput[[k]]][[1]],{k,1,Length[BoundaryLowScaleInput]}]];,temp=Join[temp,Transpose[BoundaryLowScaleInput][[1]]];
 ];
 ];
-temp=Select[Flatten[temp],(FreeQ[HighScaleParametersAllwithVEVsRegimes,#]&&FreeQ[MINPAR,#]&&FreeQ[EXTPAR,#]&&FreeQ[ListAllInputParameters,#]&&FreeQ[listVEVs,#]&&FreeQ[Join[highScaleIn,lowScaleIn],#]&&FreeQ[Join[highScaleIn,lowScaleIn],Head[#]]&&FreeQ[HighScaleParametersAllwithVEVsRegimes,Head[#]]&&FreeQ[MINPAR,Head[#]]&&FreeQ[EXTPAR,Head[#]]&&FreeQ[ListAllInputParameters,Head[#]]&&FreeQ[listVEVs,Head[#]])&];
+temp=Select[Flatten[temp],(FreeQ[HighScaleParametersAllwithVEVsRegimes,#]&&FreeQ[MINPAR,#]&&FreeQ[EXTPAR,#]&&FreeQ[ListAllInputParameters,#]&&FreeQ[listVEVs,#]&&FreeQ[Join[highScaleIn,lowScaleIn],#]&&FreeQ[Join[highScaleIn,lowScaleIn],Head[#]]&&FreeQ[HighScaleParametersAllwithVEVsRegimes,Head[#]]&&FreeQ[MINPAR,Head[#]]&&FreeQ[EXTPAR,Head[#]]&&FreeQ[ListAllInputParameters,Head[#]]&&FreeQ[listVEVs,Head[#]] && Head[#]=!=re  && Head[#]=!=im  )&];
 temp=Intersection[temp];
 
 temp=Select[temp,FreeQ[AdditionalParametersLagrange,#]&];
@@ -835,10 +835,10 @@ WriteString[ModelData,"End Function \n"];
 
 (*
 WriteClebschGordan[file_]:=Block[{i,j,temp},
-For[i=1,i\[LessEqual]Length[SA`ClebschGordon],
-WriteString[file,"Complex(dp), Parameter :: CG"<>ToString[i]<>"("<>StringReplace[ToString[Table[DimR[SusynoForm[SA`ClebschGordon[[i,1,1]]],SA`ClebschGordon[[i,1,2,j]]],{j,1,Length[SA`ClebschGordon[[i,1,2]]]}]],{"{"\[Rule]"","}"\[Rule]""}]<>") = Reshape(Source=(/ & \n "];
+For[i=1,i<=Length[SA`ClebschGordon],
+WriteString[file,"Complex(dp), Parameter :: CG"<>ToString[i]<>"("<>StringReplace[ToString[Table[DimR[SusynoForm[SA`ClebschGordon[[i,1,1]]],SA`ClebschGordon[[i,1,2,j]]],{j,1,Length[SA`ClebschGordon[[i,1,2]]]}]],{"{"->"","}"->""}]<>") = Reshape(Source=(/ & \n "];
 WriteString[file,"&"<>StringDrop[StringDrop[SPhenoForm[Flatten[Transpose/@N[SA`ClebschGordon[[i,2]]]]],5],-1]<>"& \n"];
-WriteString[file,"&/),shape=(/"<>StringReplace[ToString[Table[DimR[SusynoForm[SA`ClebschGordon[[i,1,1]]],SA`ClebschGordon[[i,1,2,j]]],{j,1,Length[SA`ClebschGordon[[i,1,2]]]}]],{"{"\[Rule]"","}"\[Rule]""}]<>"/)) \n \n"];
+WriteString[file,"&/),shape=(/"<>StringReplace[ToString[Table[DimR[SusynoForm[SA`ClebschGordon[[i,1,1]]],SA`ClebschGordon[[i,1,2,j]]],{j,1,Length[SA`ClebschGordon[[i,1,2]]]}]],{"{"->"","}"->""}]<>"/)) \n \n"];
 i++;];
 ];
 *)

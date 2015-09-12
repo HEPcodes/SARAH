@@ -434,9 +434,8 @@ Return[SA`Casimir[getBlank[Ext],pos[[1,1,1]]]];,
 Return[1];
 ];
 ];
-
 If[Select[getIndexRange[Int1],(FreeQ[getIndexRange[Ext],#1] ==False && FreeQ[getIndexRange[Int2],#1] ==False  && #1[[1]]=!=generation)&]=!={},
-Return[getChargeFactor[{{Cp[Ext,Int1,Int2],Cp[AntiField[Ext],AntiField[Int1],AntiField[Int2]]},{External[1]->Ext,External[2]->AntiField[Ext],Internal[1]->Int1,Internal[2]->Int2}},{{{Ext,ex1},{Int1,in1},{Int2,in2}},{{AntiField[Ext],ex2},{AntiField[Int1],in1},{AntiField[Int2],in2}}},Delta[ex1,ex2]]];
+Return[Abs[getChargeFactor[{{Cp[Ext,Int1,Int2],Cp[AntiField[Ext],AntiField[Int1],AntiField[Int2]]},{External[1]->Ext,External[2]->AntiField[Ext],Internal[1]->Int1,Internal[2]->Int2}},{{{Ext,ex1},{Int1,in1},{Int2,in2}},{{AntiField[Ext],ex2},{AntiField[Int1],in1},{AntiField[Int2],in2}}},Delta[ex1,ex2]]]];
 Return[999];
 ];
 
@@ -516,7 +515,6 @@ CG[SU[3],{{1,0},{1,1},{0,1}}][a_,b_,c_]->Lam[b,a,c]/2,CG[SU[3],{{1,1},{1,0},{0,1
 
 norm=1;
 
-
 fixvar = Intersection[Select[fixvar,(FreeQ[cfac,#]==False)&]];
 sumvar = Intersection[Select[sumvar,(FreeQ[cfac,#]==False)&]];
 
@@ -528,7 +526,7 @@ cfacsave=cfac;
 
 
 sumvarCount=1;
-intfields=Select[list[[2]],(FreeQ[#,Internal]==False)&];
+intfields=Select[list[[2]],(FreeQ[#,Internal]==False || FreeQ[#,Propagator]==False) &];
 extfields=Select[list[[2]],(FreeQ[#,External]==False)&];
 For[k=1,k<=Length[intfields],
 cind=getIndizesWI[RE[intfields[[k,2]]]];
@@ -687,7 +685,7 @@ cfac = cfac/norm /. subfixvar;
 cfacsave=cfac;
 
 sumvarCount=1;
-intfields=Select[list[[2]],(FreeQ[#,Internal]==False)&];
+intfields=Select[list[[2]],(FreeQ[#,Internal]==False || FreeQ[#,Propagator]==False)&];
 extfields=Select[list[[2]],(FreeQ[#,External]==False)&];
 For[k=1,k<=Length[intfields],
 cind=getIndizesWI[RE[intfields[[k,2]]]];

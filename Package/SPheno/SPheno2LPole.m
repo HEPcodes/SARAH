@@ -13,7 +13,7 @@ Print["------------------------------------------------"];
 Print[StyleForm["Writing SPheno two loop diagrammatic Higgs mass","Section",FontSize->12]];
 Print["by Mark Goodsell (goodsell@lpthe.jussieu.fr), arxiv:1503.03098"];
 
-$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+(* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 
 spheno2LP=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"2LPole_"<>ModelName<>".f90"]];
 

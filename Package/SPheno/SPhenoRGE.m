@@ -20,7 +20,7 @@
 
 
 GenerateSPhenoRGEs:=Block[{i, currentRegime,readRegime},
-$sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}];
+(* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 (*CreateDirectory[$sarahCurrentSPhenoDir];*)
 Print[StyleForm["Write RGEs","Section",FontSize->12]];
 sphenoRGE=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"RGEs_"<>ModelName<>".f90"]];
@@ -855,7 +855,7 @@ If[Length[getDimParameters[listParameters[[i]]]]==2  && Adj[listParameters[[i]]]
 WriteString[sphenoRGE,"Call Adjungate("<>SPhenoForm[listParameters[[i]]]<>",adj"<>SPhenoForm[listParameters[[i]]]<>")\n"];
 subAdj = Join[subAdj,{Adj[ToExpression[SPhenoForm[listParameters[[i]]]]]-> ToExpression["adj"<>SPhenoForm[listParameters[[i]]]]}];
 subAdj = Join[subAdj,{Adj[listParameters[[i]]]-> ToExpression["adj"<>SPhenoForm[listParameters[[i]]]]}];
-(* subAdj = Join[subAdj,{listParameters[[i]]-> ToExpression[SPhenoForm[listParameters[[i]]]]}]; *)
+(* subAdj = Join[subAdj,{listParameters[[i]]\[Rule] ToExpression[SPhenoForm[listParameters[[i]]]]}]; *)
 ];
 i++;];
 
@@ -1129,9 +1129,9 @@ _,
 dim = getDimSPheno[name];
 Switch[Length[getDimSPheno[name]],
 3,
-	(* For[j55=1,j55<=dim[[3]],
+	(* For[j55=1,j55\[LessEqual]dim[[3]],
 	String1LoopHead = "beta" <>SPhenoForm[name]<>"1(:,:,"<>ToString[j55]<>")";
-	String1Loop =  SPhenoForm[Coefficient[OneLoop,Kronecker[j55,i3]] /. Kronecker[a__]->ToExpression["id"<>ToString[getDimSPheno[name][[1]]]<>"R"] /. a_[i1,i2]->a /. a_[i1]->a /. a_[i2,i1]->Transpose[a]];
+	String1Loop =  SPhenoForm[Coefficient[OneLoop,Kronecker[j55,i3]] /. Kronecker[a__]\[Rule]ToExpression["id"<>ToString[getDimSPheno[name][[1]]]<>"R"] /. a_[i1,i2]\[Rule]a /. a_[i1]\[Rule]a /. a_[i2,i1]\[Rule]Transpose[a]];
 	WriteString[sphenoRGE, FortranLineBreak[String1LoopHead, String1Loop,99] <>"\n"]; 
 	j55++;]; *)
 	WriteString[sphenoRGE,"Do i1=1,"<>ToString[dim[[1]]]<>"\n"];
@@ -1256,9 +1256,9 @@ dim = getDimSPheno[name];
 Switch[Length[getDimSPheno[name]],
 3,
 (*	
-For[j55=1,j55<=dim[[3]],
+For[j55=1,j55\[LessEqual]dim[[3]],
 	String2LoopHead = "beta" <>SPhenoForm[name]<>"2(:,:,"<>ToString[j55]<>")" ;
-	String2Loop = SPhenoForm[Coefficient[TwoLoop,Kronecker[j55,i3]]   /. Kronecker[a__]->ToExpression["id"<>ToString[getDimSPheno[name][[1]]]<>"R"]/. a_[i1,i2]->a /. a_[i1]->a  /. a_[i2,i1]->Transpose[a]];
+	String2Loop = SPhenoForm[Coefficient[TwoLoop,Kronecker[j55,i3]]   /. Kronecker[a__]\[Rule]ToExpression["id"<>ToString[getDimSPheno[name][[1]]]<>"R"]/. a_[i1,i2]\[Rule]a /. a_[i1]\[Rule]a  /. a_[i2,i1]\[Rule]Transpose[a]];
 	WriteString[sphenoRGE, FortranLineBreak[String2LoopHead, String2Loop,99] <>"\n"];
 	j55++;]; *)
 	WriteString[sphenoRGE,"Do i1=1,"<>ToString[dim[[1]]]<>"\n"];
@@ -1397,11 +1397,11 @@ listPowers= DeleteCases[listPowers,x_MatMul^c_,10];
 
 temp1L =Expand[list1L]//. a_[i1,i2]->0;
 temp2L = Expand[list2L] //. a_[i1,i2]->0;
-listDyade1=Flatten[{Cases[temp1L,x_[___,i1,___] y_[___,i2,___],5],Cases[temp1L,d_ x_[___,i1,___] y_[___,i2,___],5],Cases[temp1L,x_[___,i1,___] conj[y_[___,i2,___]],5],Cases[temp1L,d_ x_[___,i1,___] conj[y_[___,i2,___]],5],Cases[temp1L,conj[x_[___,i1,___]] y_[___,i2,___],5],Cases[temp1L,d_ conj[x_[___,i1,___]] y_[___,i2,___],5],Cases[temp1L,conj[x_[___,i1,___]] conj[y_[___,i2,___]],5],Cases[temp1L,d_ conj[x_[___,i1,___]] conj[y_[___,i2,___]],5]} /. Kronecker[i1,i2]->0/. Kronecker[i2,i1]->0  /.Kronecker[___,i1,___]->0 /. Kronecker[___,i2,___]->0 /.Kronecker[a___,i3,b___]->1/. Kronecker->ID3R ]; (*/.Kronecker[___,i1,___]->0 /. Kronecker[___,i2,___]->0*)
-listDyade2=Flatten[{Cases[temp2L,x_[___,i1,___] y_[___,i2,___],5],Cases[temp2L,d_ x_[___,i1,___] y_[___,i2,___],5],Cases[temp2L,x_[___,i1,___] conj[y_[___,i2,___]],5],Cases[temp2L,d_ x_[___,i1,___] conj[y_[___,i2,___]],5],Cases[temp2L,conj[x_[___,i1,___]] y_[___,i2,___],5],Cases[temp2L,d_ conj[x_[___,i1,___]] y_[___,i2,___],5],Cases[temp2L,conj[x_[___,i1,___]] conj[y_[___,i2,___]],5],Cases[temp2L,d_ conj[x_[___,i1,___]] conj[y_[___,i2,___]],5]} /. Kronecker[i1,i2]->0/. Kronecker[i2,i1]->0  /.Kronecker[___,i1,___]->0 /. Kronecker[___,i2,___]->0/.Kronecker[a___,i3,b___]->1 /. Kronecker->ID3R ]; (*/.Kronecker[___,i1,___]->0 /. Kronecker[___,i2,___]->0 *) 
+listDyade1=Flatten[{Cases[temp1L,x_[___,i1,___] y_[___,i2,___],5],Cases[temp1L,d_ x_[___,i1,___] y_[___,i2,___],5],Cases[temp1L,x_[___,i1,___] conj[y_[___,i2,___]],5],Cases[temp1L,d_ x_[___,i1,___] conj[y_[___,i2,___]],5],Cases[temp1L,conj[x_[___,i1,___]] y_[___,i2,___],5],Cases[temp1L,d_ conj[x_[___,i1,___]] y_[___,i2,___],5],Cases[temp1L,conj[x_[___,i1,___]] conj[y_[___,i2,___]],5],Cases[temp1L,d_ conj[x_[___,i1,___]] conj[y_[___,i2,___]],5]} /. Kronecker[i1,i2]->0/. Kronecker[i2,i1]->0  /.Kronecker[___,i1,___]->0 /. Kronecker[___,i2,___]->0 /.Kronecker[a___,i3,b___]->1/. Kronecker->ID3R ]; (*/.Kronecker[___,i1,___]\[Rule]0 /. Kronecker[___,i2,___]\[Rule]0*)
+listDyade2=Flatten[{Cases[temp2L,x_[___,i1,___] y_[___,i2,___],5],Cases[temp2L,d_ x_[___,i1,___] y_[___,i2,___],5],Cases[temp2L,x_[___,i1,___] conj[y_[___,i2,___]],5],Cases[temp2L,d_ x_[___,i1,___] conj[y_[___,i2,___]],5],Cases[temp2L,conj[x_[___,i1,___]] y_[___,i2,___],5],Cases[temp2L,d_ conj[x_[___,i1,___]] y_[___,i2,___],5],Cases[temp2L,conj[x_[___,i1,___]] conj[y_[___,i2,___]],5],Cases[temp2L,d_ conj[x_[___,i1,___]] conj[y_[___,i2,___]],5]} /. Kronecker[i1,i2]->0/. Kronecker[i2,i1]->0  /.Kronecker[___,i1,___]->0 /. Kronecker[___,i2,___]->0/.Kronecker[a___,i3,b___]->1 /. Kronecker->ID3R ]; (*/.Kronecker[___,i1,___]\[Rule]0 /. Kronecker[___,i2,___]\[Rule]0 *) 
 listDyade1 = Select[DeleteCases[listDyade1,0,5],(FreeQ[#,i3]==True)&];
 listDyade2 = Select[DeleteCases[listDyade2,0,5],(FreeQ[#,i3]==True)&];
-(* listDyade = DeleteCases[DeleteCases[{listDyade1,listDyade2},0,5],x_?((FreeQ[#,i3]==False)&),6] /. {{}}->{{},{}};  *)
+(* listDyade = DeleteCases[DeleteCases[{listDyade1,listDyade2},0,5],x_?((FreeQ[#,i3]\[Equal]False)&),6] /. {{}}\[Rule]{{},{}};  *)
 listDyade = {listDyade1,listDyade2}; 
 listDyade[[1]]=Intersection[(Select[#,(FreeQ[#,i1]==False || FreeQ[#,i2]==False)&])&/@listDyade[[1]]];
 listDyade[[2]]=Intersection[(Select[#,(FreeQ[#,i1]==False || FreeQ[#,i2]==False)&])&/@listDyade[[2]]];
@@ -1595,8 +1595,8 @@ getDimSPhenoRev[x_]:=getDimSPheno[x]/;(Head[x]=!=Adj&&Head[x]=!=Tp)
 AddToParameters[matmul_]:=Block[{i,len,dims},
 len=Length[matmul];
 dims=getDimSPheno[matmul[[len]]];
-For[i=1,i <=len-1,
-If[Length[dims]==2,
+For[i=1,i \[LessEqual]len-1,
+If[Length[dims]\[Equal]2,
 If[Head[matmul[[len]]] ===Tp|| Head[matmul[[len]]] === Adj ,
 dims={First[dims]};,
 dims={Last[dims]};
@@ -1604,7 +1604,7 @@ dims={Last[dims]};
 dims={};
 ];
 dimsT=getDimSPheno[matmul[[len-i]]];
-If[Length[dimsT]==2 ,
+If[Length[dimsT]\[Equal]2 ,
 If[Head[matmul[[len-i]]] ===Tp|| Head[matmul[[len-i]]] === Adj ,
 dims=Join[{dimsT[[2]]},dims];,
 dims=Join[{First[dimsT]},dims];
@@ -1624,14 +1624,14 @@ Switch[Length[dims],
 AddToParameters[matmul_]:=Block[{i,len,dims},
 len=Length[matmul];
 dims=getDimSPheno[matmul[[len]]];
-If[Length[dims]==2,
+If[Length[dims]\[Equal]2,
 If[Head[matmul[[len]]]===Tp||Head[matmul[[len]]]===Adj,
 dims={First[dims]};,
 dims={Last[dims]};];,
 dims={};];
 
 dimsT=getDimSPheno[matmul[[1]]];
-If[Length[dimsT]==2,
+If[Length[dimsT]\[Equal]2,
 If[Head[matmul[[1]]]===Tp||Head[matmul[[1]]]===Adj,
 dims=Join[{dimsT[[2]]},dims];,
 dims=Join[{First[dimsT]},dims];];
