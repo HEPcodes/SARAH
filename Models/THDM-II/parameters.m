@@ -10,17 +10,17 @@ ParameterDefinitions = {
 {aEWinv,    { Description -> "inverse weak coupling constant at mZ"}},
 
 {Yu,        { Description -> "Up-Yukawa-Coupling",
-			 DependenceNum ->  Sqrt[2]/v* {{Mass[Fu,1],0,0},
+			 DependenceNum ->  Sqrt[2]/v2* {{Mass[Fu,1],0,0},
              									{0, Mass[Fu,2],0},
              									{0, 0, Mass[Fu,3]}}}}, 
              									
 {Yd,        { Description -> "Down-Yukawa-Coupling",
-			  DependenceNum ->  Sqrt[2]/v* {{Mass[Fd,1],0,0},
+			  DependenceNum ->  Sqrt[2]/v1* {{Mass[Fd,1],0,0},
              									{0, Mass[Fd,2],0},
              									{0, 0, Mass[Fd,3]}}}},
              									
 {Ye,        { Description -> "Lepton-Yukawa-Coupling",
-			  DependenceNum ->  Sqrt[2]/v* {{Mass[Fe,1],0,0},
+			  DependenceNum ->  Sqrt[2]/v1* {{Mass[Fe,1],0,0},
              									{0, Mass[Fe,2],0},
              									{0, 0, Mass[Fe,3]}}}}, 
                                                                             

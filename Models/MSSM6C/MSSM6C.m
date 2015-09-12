@@ -128,3 +128,8 @@ DEFINITION[EWSB][DiracSpinors]={
  Glu ->{ fG, conj[fG]},
  Six ->{ FS1, conj[FS2]}
 };	
+
+
+(* Model not supported by CalcHep and WHIZARD *)
+SetOptions[MakeAll, IncludeCalcHep->False, IncludeWHIZARD->False];
+

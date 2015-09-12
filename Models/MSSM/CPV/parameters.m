@@ -56,7 +56,7 @@ ParameterDefinitions = {
               Dependence -> None,
               DependenceNum -> None,
               DependenceOptional -> None,
-              Real -> False }},
+              Real -> True }},
 
 {ZP,        { Description->"Charged-Mixing-Matrix",
               Real -> False,

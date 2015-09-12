@@ -160,3 +160,8 @@ DEFINITION[EWSB][DiracSpinors]={
  Cha ->{ Lm, conj[Lp]},
  Glu ->{ fG, conj[fG]}
 };
+
+
+(* Model not supported by SPheno *)
+SetOptions[MakeAll, IncludeSPheno->False];
+

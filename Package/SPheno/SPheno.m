@@ -144,15 +144,15 @@ SetOptions[CalcLoopCorrections,OnlyWith->HeavyFields];
 If[IntermediateScale ===True,
 SuffixRegime="R"<>ToString[RegimeNr];
 If[Head[HeavyFields]===List,
-(* ModelOutput[Eigenstates, ReadLists->ReadL, IncludeLoopCorrections ->True,IncludeRGEs->True, VerticesForLoops->True,IncludeVertices->True];  *)
+(* ModelOutput[Eigenstates, ReadLists\[Rule]ReadL, IncludeLoopCorrections \[Rule]True,IncludeRGEs\[Rule]True, VerticesForLoops\[Rule]True,IncludeVertices\[Rule]True];  *)
  ModelOutput[Eigenstates, ReadLists->ReadL, IncludeLoopCorrections ->False,IncludeRGEs->True, VerticesForLoops->False,IncludeVertices->False];
 getUnmixedMassesDummy[Eigenstates]; ,
  ModelOutput[Eigenstates, ReadLists->ReadL, IncludeLoopCorrections ->False,IncludeRGEs->True, VerticesForLoops->False,IncludeVertices->False]; 
 ];,
 (*
-If[NonSUSYModel==True,
-ModelOutput[Eigenstates, ReadLists->ReadL, IncludeLoopCorrections ->True,IncludeRGEs->False,VerticesForLoops->True];,
-ModelOutput[Eigenstates, ReadLists->ReadL, IncludeLoopCorrections ->True,IncludeRGEs->True, VerticesForLoops->True];
+If[NonSUSYModel\[Equal]True,
+ModelOutput[Eigenstates, ReadLists\[Rule]ReadL, IncludeLoopCorrections \[Rule]True,IncludeRGEs\[Rule]False,VerticesForLoops\[Rule]True];,
+ModelOutput[Eigenstates, ReadLists\[Rule]ReadL, IncludeLoopCorrections \[Rule]True,IncludeRGEs\[Rule]True, VerticesForLoops\[Rule]True];
 ];
 *)
 
@@ -162,7 +162,7 @@ ModelOutput[Eigenstates, ReadLists->ReadL, IncludeLoopCorrections ->True,Include
 ModelOutput[Eigenstates, ReadLists->ReadL, IncludeLoopCorrections ->True,IncludeRGEs->True, VerticesForLoops->True];
 ];
 
- (* ModelOutput[Eigenstates, ReadLists->ReadL, IncludeLoopCorrections ->True,IncludeRGEs->True, VerticesForLoops->True];  *)
+ (* ModelOutput[Eigenstates, ReadLists\[Rule]ReadL, IncludeLoopCorrections \[Rule]True,IncludeRGEs\[Rule]True, VerticesForLoops\[Rule]True];  *)
 SuffixRegime="";
 ];
 
@@ -485,7 +485,7 @@ vcount=1;
 vevTemp=Map[Sort[#,(Position[basis,vevs[[Position[vevs,#][[1,1]]]][[4,1]]][[1,3]]<Position[basis,vevs[[Position[vevs,#2][[1,1]]]][[4,1]]][[1,3]])&]&,listVEVseparated];
 subTadpoleNumber={};
 For[i=1,i<=Length[ScalarsForTadpoles],
-(* For[j=1,j<=Length[listVEVseparated[[i]]], *)
+(* For[j=1,j\[LessEqual]Length[listVEVseparated[[i]]], *)
 If[FreeQ[basis,ScalarsForTadpoles[[i]]],
 currentbasis={ScalarsForTadpoles[[i]]};,
 pos=Position[basis,ScalarsForTadpoles[[i]]][[1,1]];
@@ -570,8 +570,8 @@ NewParametersFromTadpoles={};
 SignumsTadpoles={};
 
 (*
-EquLoop = EquLoop /. subReal  /. subSPhenoForm/. conj[x_]->x ;
-EquTree = EquTree /. subReal  /. subSPhenoForm/. conj[x_]->x;
+EquLoop = EquLoop /. subReal  /. subSPhenoForm/. conj[x_]\[Rule]x ;
+EquTree = EquTree /. subReal  /. subSPhenoForm/. conj[x_]\[Rule]x;
 *)
 
 EquLoop = EquLoop /. subReal  /. subSPhenoForm/. subReal //. sum[a_,b_,c_,d_]:>Sum[d,{a,b,c}]  //. AssumptionsTadpoleEquations;
@@ -589,7 +589,6 @@ i++;];
 DynamicStatusSPhenoTad[parameters]="solve equations";
 resTree=Solve[EquTree,Flatten[(parameters /.subReImPar    /. subGenParameters /. subSPhenoForm)]]/. subSPhenoFormBack;
 resLoop=Solve[EquLoop,Flatten[(parameters /.subReImPar  /. subGenParameters /. subSPhenoForm )]] /. subSPhenoFormBack;
-
 
 If[Length[resLoop]> 1 && Length[resLoop]==2^SquaredParameterInvolved,
 SubSolutionsTadpolesLoop={};
@@ -609,9 +608,10 @@ SubSolutionsTadpolesLoop=Join[SubSolutionsTadpolesLoop,{absName->resLoop[[1,i,2]
 SubSolutionsTadpolesTree=Join[SubSolutionsTadpolesTree,{absName->resTree[[1,i,2]]^2,resTree[[1,i,1]]->phaseName*Sqrt[absName]}]; 
 ];
 i++;];,
-If[Length[resLoop]>1,
+If[Length[resLoop]>1 ,
 SeveralIndependentTadpoleSolutions=True;
 SubSolutionsTadpolesTree=resTree;
+If[Length[resLoop]>Length[resTree],
 SubSolutionsTadpolesLoop={};
 For[i=1,i<=Length[resTree],
 added=False;
@@ -624,6 +624,9 @@ SubSolutionsTadpolesLoop = Join[SubSolutionsTadpolesLoop,{resLoop[[j]]}];
 ];
 j++;];
 i++;];,
+SubSolutionsTadpolesLoop=resLoop ;
+SubSolutionsTadpolesTree=resTree; 
+];,
 SeveralIndependentTadpoleSolutions=False;
 SubSolutionsTadpolesLoop=Flatten[resLoop] ;
 SubSolutionsTadpolesTree=Flatten[resTree]; 
@@ -1059,10 +1062,10 @@ HighScaleParameter = Complement[Complement[HighScaleParameter,LowScaleParameter]
 
 If[HighScaleParameter==={},
 AllRGEsRunning=True;,
-(* If[Complement[HighScaleParameter,ParametersToSolveTadpoles /. {re[x_]->x,im[x_]->x}]==={}, *)
+(* If[Complement[HighScaleParameter,ParametersToSolveTadpoles /. {re[x_]\[Rule]x,im[x_]\[Rule]x}]==={}, *)
 If[Intersection[LowScaleParameter,ParametersToSolveTadpoles /. {re[x_]->x,im[x_]->x}]=!={},
 AllRGEsRunning=True;
-(* LowScaleParameter = Join[LowScaleParameter,ParametersToSolveTadpoles /. {re[x_]->x,im[x_]->x}]; *)
+(* LowScaleParameter = Join[LowScaleParameter,ParametersToSolveTadpoles /. {re[x_]\[Rule]x,im[x_]\[Rule]x}]; *)
 LowScaleParameter=Join[LowScaleParameter,HighScaleParameter];
 HighScaleParameter={};,
 AllRGEsRunning=False;
@@ -1303,9 +1306,9 @@ RealParametersRegime = Join[RealParametersRegime,{listAllParametersAndVEVs[[i]]}
 i++;];
 
 (*
-For[i=1,i<=Length[U1MixingParameters],
+For[i=1,i\[LessEqual]Length[U1MixingParameters],
 temp = Join[temp,{{U1MixingParameters[[i]],getDimSPheno[U1MixingParameters[[i]]]}}];
-If[FreeQ[realVar,U1MixingParameters[[i]]]==False,
+If[FreeQ[realVar,U1MixingParameters[[i]]]\[Equal]False,
 RealParameters = Join[RealParameters,{U1MixingParameters[[i]]}];
 ];
 i++;];
@@ -1581,16 +1584,16 @@ i++;];
 
 (*
 MakeListOfAllParameters:=Block[{tempList={}},
-If[Length[listWtriOne]!= 0, tempList=Transpose[Transpose[listWtriOne/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]]; ];
-If[Length[listWbiOne]!= 0,tempList=Transpose[Transpose[listWbiOne/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]];];
-If[Length[listAtriOne]!= 0,tempList=Transpose[Transpose[listAtriOne/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]];];
-If[Length[listAbiOne]!= 0,tempList=Transpose[Transpose[listAbiOne/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]];];
-If[Length[listAone]!= 0,tempList=Transpose[Transpose[listAone/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]];];
-If[Length[listWone]!= 0,tempList=Transpose[Transpose[listWone/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]];];
-If[Length[listSM]!= 0,tempList=Transpose[listSM][[2]] /. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1;];
-If[Length[listGM]!= 0,tempList=Transpose[listGM][[2]] /. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1;];
-If[Length[listW4]!= 0,tempList=Transpose[Transpose[listW4One/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1][[2]]][[2]];];
-If[Length[BetaGauge]!= 0,tempList=Transpose[BetaGauge][[1]]/. Delta[a__]->1 /. epsTensor[a__]->1 /. InvMat[a__][b__]->1;];
+If[Length[listWtriOne]\[NotEqual] 0, tempList=Transpose[Transpose[listWtriOne/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]]; ];
+If[Length[listWbiOne]\[NotEqual] 0,tempList=Transpose[Transpose[listWbiOne/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]];];
+If[Length[listAtriOne]\[NotEqual] 0,tempList=Transpose[Transpose[listAtriOne/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]];];
+If[Length[listAbiOne]\[NotEqual] 0,tempList=Transpose[Transpose[listAbiOne/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]];];
+If[Length[listAone]\[NotEqual] 0,tempList=Transpose[Transpose[listAone/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]];];
+If[Length[listWone]\[NotEqual] 0,tempList=Transpose[Transpose[listWone/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]];];
+If[Length[listSM]\[NotEqual] 0,tempList=Transpose[listSM][[2]] /. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1;];
+If[Length[listGM]\[NotEqual] 0,tempList=Transpose[listGM][[2]] /. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1;];
+If[Length[listW4]\[NotEqual] 0,tempList=Transpose[Transpose[listW4One/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1][[2]]][[2]];];
+If[Length[BetaGauge]\[NotEqual] 0,tempList=Transpose[BetaGauge][[1]]/. Delta[a__]\[Rule]1 /. epsTensor[a__]\[Rule]1 /. InvMat[a__][b__]\[Rule]1;];
 ListAllInputParameters=tempList;
 ];*)
 

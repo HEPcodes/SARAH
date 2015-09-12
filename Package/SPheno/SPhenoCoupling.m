@@ -51,7 +51,7 @@ DynamicCouplings["AllCouplingsReallyAll"]="";
 Print["  Processing couplings for all calculations: ",Dynamic[DynamicCouplingsTreeAll]," ",Dynamic[DynamicCouplings["AllCouplingsReallyAll"]]];
 
 DynamicCouplingsTreeAll="building couplings";
-temp=SPhenoCouplingList[Select[VertexListNonCC,FreeQ[#,ASS]&] //. RXi[_]->1];
+temp=SPhenoCouplingList[Select[VertexListNonCC,FreeQ[#,ASS]&]  (*//. RXi[_]\[Rule]1*)];
 SPhenoCouplingsAllreallyAll=temp[[1]];
 parametersAllreallyAll=temp[[2]];
 namesAllreallyAll=temp[[3]];
@@ -125,6 +125,7 @@ WriteSPhenoCouplings[SPhenoCouplings3P,False,"2L"];
 (*------TWO LOOP POLE COUPLINGS------*)
 (* by M.D. Goodsell *)
 (*-----------------------------------*)
+If[SupersymmetricModel=!=False,
 DynamicCouplings2LPole="";
 Print["Creating couplings for 2-loop pole mass: ",Dynamic[DynamicCouplings2LPole]];
 
@@ -160,7 +161,7 @@ parametersAll4Pole=temp2[[2]];
 namesAll4Pole=temp2[[3]];
 WriteSPhenoAllCouplings[SPhenoCouplings4Pole,parametersAll4Pole,namesAll4Pole,"CouplingsFor2LPole4","2LP"];
 WriteSPhenoCouplings[SPhenoCouplings4Pole,False,"2LP"];
-
+];
 (*--------END TWO LOOP POLE COUPLINGS-------------*)
 (*------------------------------------------------*)
 
@@ -426,7 +427,7 @@ coupNr++;
 n1++;];
 
 
-Return[{SPhenoCouplings //. Mass[x_]:>SPhenoMass[x] //. RXi[_]->1,parameterNames,couplingNames}];
+Return[{SPhenoCouplings //. Mass[x_]:>SPhenoMass[x] (*//. RXi[_]\[Rule]1*),parameterNames,couplingNames}];
 
 ];
 
@@ -898,7 +899,7 @@ parameterNames=Join[parameterNames,{SPhenoMass[PART[V][[i2,1]]]}]];
 i2++;];
 coupNr++;];
 fourptcouplingstatus="Complete ("<>ToString[numberofcouplings]<>"/"<>ToString[numberofcouplings]<>") processed, "<>ToString[coupNr-1]<>" unique couplings found";
-Return[{SPhenoCouplings//.Mass[x_]:>SPhenoMass[x]//.RXi[_]->1,parameterNames,couplingNames}];
+Return[{SPhenoCouplings//.Mass[x_]:>SPhenoMass[x](*//.RXi[_]\[Rule]1*),parameterNames,couplingNames}];
 ];
 
 

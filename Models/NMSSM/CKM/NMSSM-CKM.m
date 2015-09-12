@@ -161,3 +161,5 @@ DEFINITION[EWSB][DiracSpinors]={
  Glu ->{ fG, conj[fG]}
 };
 
+(* Model not supported by SPheno *)
+SetOptions[MakeAll, IncludeSPheno->False];

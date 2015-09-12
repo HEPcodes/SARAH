@@ -97,4 +97,6 @@ DEFINITION[EWSB][GaugeES]={
  Fe2 ->{  0, Fe2}};
 
 
+(* Model not supported by CalcHep *)
+SetOptions[MakeAll, IncludeCalcHep->False];
 

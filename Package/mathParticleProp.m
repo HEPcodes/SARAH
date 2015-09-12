@@ -2298,7 +2298,7 @@ i=1;
 If[FreeQ[FFields,invFields[[j]]],
 pos=Position[SFields,invFields[[j]]][[1,1]];
 If[Head[SFieldsMultiplets[[pos]] ]===List,
-subs=Join[subs,{Replace[DeleteDuplicates[Cases[Flatten[SFieldsMultiplets[[pos]] ] /.conj[x_]->x/. x_?NumericQ->1,x_Symbol]], x_Symbol:>(x[names[[nameNr]]]->names[[nameNr]][i++]),2]}];
+subs=Join[subs,{Replace[DeleteDuplicates[Cases[Flatten[SFieldsMultiplets[[pos]] ] /. conj[x_]:>ToExpression[ToString[x]<>"c"]/.conj[x_]->x/. x_?NumericQ->1,x_Symbol]], x_Symbol:>(x[names[[nameNr]]]->names[[nameNr]][i++]),2]}];
 subInv=Join[subInv,{invFields[[j]][{b__}][{genf[j],d___}]->invFields[[j]][{b}][{genf[j],d}][names[[nameNr]]],invFields[[j]][{genf[j],d___}]->invFields[[j]][{genf[j],d}][names[[nameNr]]],invFields[[j]][{b__}][{genf[j],d___}][c_Integer]->invFields[[j]][{b}][{genf[j],d}][c][names[[nameNr]]],invFields[[j]][{genf[j],d___}][c_Integer]->invFields[[j]][{genf[j],d}][c][names[[nameNr]]]}];
 dims=Join[dims,{i-1}];
 nameNr++;,
@@ -2306,7 +2306,7 @@ subInv=Join[subInv,{invFields[[j]][{b__}][{genf[j],d___}]->1,invFields[[j]][{gen
 ];,
 pos=Position[FFields,invFields[[j]]][[1,1]];
 If[Head[FFieldsMultiplets[[pos]] ]===List,
-subs=Join[subs,{Replace[DeleteDuplicates[Cases[Flatten[FFieldsMultiplets[[pos]] ] /.conj[x_]->x/. x_?NumericQ->1,x_Symbol]], x_Symbol:>(x[names[[nameNr]]]->names[[nameNr]][i++]),2]}];
+subs=Join[subs,{Replace[DeleteDuplicates[Cases[Flatten[FFieldsMultiplets[[pos]] ] /. conj[x_]:>ToExpression[ToString[x]<>"c"]/.conj[x_]->x/. x_?NumericQ->1,x_Symbol]], x_Symbol:>(x[names[[nameNr]]]->names[[nameNr]][i++]),2]}];
 subInv=Join[subInv,{invFields[[j]][{b__}][{genf[j],d___}]->invFields[[j]][{b}][{genf[j],d}][names[[nameNr]]],invFields[[j]][{genf[j],d___}]->invFields[[j]][{genf[j],d}][names[[nameNr]]],invFields[[j]][{b__}][{genf[j],d___}][c_Integer]->invFields[[j]][{b}][{genf[j],d}][c][names[[nameNr]]],invFields[[j]][{genf[j],d___}][c_Integer]->invFields[[j]][{genf[j],d}][c][names[[nameNr]]]}];
 dims=Join[dims,{i-1}];
 nameNr++;,
@@ -2318,6 +2318,7 @@ subInv=Flatten[subInv];
 temp=SumOverExpandedIndizes[contraction*particles /. sum[a__]->1 /.A_[{b__}][c_Integer]->A[{b}] /.A_[{b__}][{d__}][c_Integer]->A[{b}][{d}] /. subInv,invFields] /. A_[{b__}][c_Integer]->A/. A_[{b__}]->A/.conj[x_]->x/.(a_?NumericQ b_Symbol)[c_Symbol]->a b[c];
 temp = temp //. Flatten[subs] /. Delta[a__]->1 /. epsTensor[a__]->1 /. CG[a__][b__]->1 /. conj[x_]->x;
 temp=temp/.sub2;
+
 Switch[Length[dims],
 2,
 result=Table[Coefficient[temp,a[i]b[j]],{i,1,dims[[1]]},{j,1,dims[[2]]}];,

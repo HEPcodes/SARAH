@@ -96,7 +96,7 @@ ParameterDefinitions = {
 {ZfW, {Description ->    "Wino Mixing Matrix"}},
 
 {ThetaWp,  { Description -> "Theta'",
-              DependenceNum -> 0  }},
+              DependenceNum -> None  }},
               
               
 {gp,       {Description -> "U(1)' Gauge Coupling"}},

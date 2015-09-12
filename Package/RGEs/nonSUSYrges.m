@@ -59,7 +59,7 @@ subRGE=subRGEDelta;
 LPName = Flatten[{PART[F],PART[S]}] /.A_[{b__}][{c__}]->A /. A_[{b__}]->A /. conj[x_]->x;
 PARTALL[F]=PART[F]/. conj[x_]->x;
 
-(*  LP=Join[PART[F],PART[S]]/. conj[x_]->x; *)
+(*  LP=Join[PART[F],PART[S]]/. conj[x_]\[Rule]x; *)
 LP=LPName;
 
 Print["Initializing Invariants... "];
@@ -282,9 +282,9 @@ subRule=Flatten[{subRuleTemp[1],subRuleTemp[2],subRuleTemp[3],subRuleTemp[4]}];
 per=Permutations[{1,2,3,4}];
 
 (*
-For[j=1,j<=Length[per],
-For[i=1,i<=Length[lA4],
-Lijkl[lA4[[i,1,per[[j,1]]]]/.subRule,lA4[[i,1,per[[j,2]]]]/.subRule,lA4[[i,1,per[[j,3]]]]/.subRule,lA4[[i,1,per[[j,4]]]]/.subRule]=lA4[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]->Conj[x] /. subForce  ;
+For[j=1,j\[LessEqual]Length[per],
+For[i=1,i\[LessEqual]Length[lA4],
+Lijkl[lA4[[i,1,per[[j,1]]]]/.subRule,lA4[[i,1,per[[j,2]]]]/.subRule,lA4[[i,1,per[[j,3]]]]/.subRule,lA4[[i,1,per[[j,4]]]]/.subRule]=lA4[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]\[Rule]Conj[x] /. subForce  ;
 i++;];
 j++;];
 *)
@@ -308,9 +308,9 @@ If[Length[lA4]==0,Lijkl[a___]=0];
 
 (*
 per=Permutations[{1,2,3}];
-For[j=1,j<=Length[per],
-For[i=1,i<=Length[lA3],
-Aijk[lA3[[i,1,per[[j,1]]]]/.subRule,lA3[[i,1,per[[j,2]]]]/.subRule,lA3[[i,1,per[[j,3]]]]/.subRule]=lA3[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]->Conj[x] /. subForce ;
+For[j=1,j\[LessEqual]Length[per],
+For[i=1,i\[LessEqual]Length[lA3],
+Aijk[lA3[[i,1,per[[j,1]]]]/.subRule,lA3[[i,1,per[[j,2]]]]/.subRule,lA3[[i,1,per[[j,3]]]]/.subRule]=lA3[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]\[Rule]Conj[x] /. subForce ;
 i++;];
 j++;];*)
 
@@ -324,12 +324,12 @@ If[Length[lA3]==0,Aijk[a___]=0];
 per=Permutations[{1,2}];
 
 (*
-For[j=1,j<=Length[per],
-For[i=1,i<=Length[lW3],
+For[j=1,j\[LessEqual]Length[per],
+For[i=1,i\[LessEqual]Length[lW3],
 If[FreeQ[SFields,getBlankSF[lW3[[i,1,3]]]],
-(*Yijk[lW3[[i,1,per[[j,1]]]]/.subRule,lW3[[i,1,per[[j,2]]]]/.subRule,lW3[[i,1,3]]/.subRule]=  lW3[[i,2,1]]/I /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]->Conj[x] /. subForce ;,*)
-Yijk[lW3[[i,1,per[[j,1]]]]/.subRule,lW3[[i,1,per[[j,2]]]]/.subRule,lW3[[i,1,3]]/.subRule]=  lW3[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]->Conj[x] /. subForce ;,
-Yijk[lW3[[i,1,per[[j,1]]]]/.subRule,lW3[[i,1,per[[j,2]]]]/.subRule,lW3[[i,1,3]]/.subRule]=  lW3[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]->Conj[x] /. subForce ;
+(*Yijk[lW3[[i,1,per[[j,1]]]]/.subRule,lW3[[i,1,per[[j,2]]]]/.subRule,lW3[[i,1,3]]/.subRule]=  lW3[[i,2,1]]/\[ImaginaryI] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]\[Rule]Conj[x] /. subForce ;,*)
+Yijk[lW3[[i,1,per[[j,1]]]]/.subRule,lW3[[i,1,per[[j,2]]]]/.subRule,lW3[[i,1,3]]/.subRule]=  lW3[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]\[Rule]Conj[x] /. subForce ;,
+Yijk[lW3[[i,1,per[[j,1]]]]/.subRule,lW3[[i,1,per[[j,2]]]]/.subRule,lW3[[i,1,3]]/.subRule]=  lW3[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]\[Rule]Conj[x] /. subForce ;
 ];
 i++;];
 j++;];
@@ -347,8 +347,8 @@ If[Length[lW3]==0,Yijk[a___]=0];
 
 
 (*
-For[i=1,i<=Length[lW2],
-Muij[lW2[[i,1,per[[j,1]]]]/.subRule,lW2[[i,1,per[[j,2]]]]/.subRule]=lW2[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]->Conj[x] /. subForce ;
+For[i=1,i\[LessEqual]Length[lW2],
+Muij[lW2[[i,1,per[[j,1]]]]/.subRule,lW2[[i,1,per[[j,2]]]]/.subRule]=lW2[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]\[Rule]Conj[x] /. subForce ;
 i++;];
 *)
 
@@ -360,8 +360,8 @@ i++;];
 If[Length[lW2]==0,Muij[a___]=0];
 
 (*
-For[i=1,i<=Length[lA2],
-Bij[lA2[[i,1,per[[j,1]]]]/.subRule,lA2[[i,1,per[[j,2]]]]/.subRule]=1/2 lA2[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]->Conj[x] /. subForce ;
+For[i=1,i\[LessEqual]Length[lA2],
+Bij[lA2[[i,1,per[[j,1]]]]/.subRule,lA2[[i,1,per[[j,2]]]]/.subRule]=1/2 lA2[[i,2,1]] /.Select[subAlways,FreeQ[#1,sum]&] /. conj[x_]\[Rule]Conj[x] /. subForce ;
 i++;];
 j++;];
 *)
@@ -381,9 +381,9 @@ SA`ListVEVi={};
 Clear[VEVi];
 
 (*
-For[j=1,j<=Length[NameOfStates],
+For[j=1,j\[LessEqual]Length[NameOfStates],
 If[Head[DEFINITION[NameOfStates[[j]]][VEVs]]===List,
-For[i=1,i<=Length[DEFINITION[NameOfStates[[j]]][VEVs]],
+For[i=1,i\[LessEqual]Length[DEFINITION[NameOfStates[[j]]][VEVs]],
 If[FreeQ[listVEVi,DEFINITION[NameOfStates[[j]]][VEVs][[i,2,1]]] && DEFINITION[NameOfStates[[j]]][VEVs][[i,2,1]]=!=0 && DEFINITION[NameOfStates[[j]]][VEVs][[i,2,2]]=!=0,
 pos=Position[SFieldsMultiplets,DEFINITION[NameOfStates[[j]]][VEVs][[i,1]]];
 tempS=(getBlankSF[Extract[SFields,pos[[1,1]]]]/. subComplexScalarsList);
@@ -395,7 +395,7 @@ sf=(RE[getFullSF[Extract[SFields,pos[[1,1]]]]]/. subComplexScalarsList);
 If[Head[sf]===List,sf=sf[[1]];];
 listVEVi = Join[listVEVi,{{sf  makeDelta[pos[[1,1]],1,2,{generation}],DEFINITION[NameOfStates[[j]]][VEVs][[i,2,1]]}}];
 SA`ListVEVi = Join[SA`ListVEVi,{{{sf}, {makeDelta[pos[[1,1]],1,2,{generation}] DEFINITION[NameOfStates[[j]]][VEVs][[i,2,1]],-1}}}];
-VEVi[sf /. Delta[a__]->1 /. RM[a__][b__]->1 /. subGCRule[1]]=getFull[DEFINITION[NameOfStates[[j]]][VEVs][[i,2,1]]] /. subGC[1];
+VEVi[sf /. Delta[a__]\[Rule]1 /. RM[a__][b__]\[Rule]1 /. subGCRule[1]]=getFull[DEFINITION[NameOfStates[[j]]][VEVs][[i,2,1]]] /. subGC[1];
 ];
 i++;];
 ];
@@ -515,11 +515,17 @@ listTri[[i]]=Join[listTri[[i]],{LP[[i]]}];
 listQuad[[i]]=Join[listQuad[[i]],{LP[[i]]}];
 i++;];
 
-
-For[i=1,i<=Length[LP],
+(*
+For[i=1,i\[LessEqual]Length[LP],
 listBi[[i]]=getFull/@Union[getBlank/@listBi[[i]]];
 listTri[[i]]=getFull/@Union[getBlank/@listTri[[i]]];
 listQuad[[i]]=getFull/@Union[getBlank/@listQuad[[i]]];
+i++;];
+*)
+For[i=1,i<=Length[LP],
+listBi[[i]]=Union[getBlank/@listBi[[i]]];
+listTri[[i]]=Union[getBlank/@listTri[[i]]];
+listQuad[[i]]=Union[getBlank/@listQuad[[i]]];
 i++;];
 
 listBi=listBi /. A_[{b__}][{c__}]->A /. A_[{b__}]->A;
@@ -604,8 +610,8 @@ SA`CasimirRGE[getBlankSF[PART[Sc][[j+1]]],i]=sum^2; (* Gauge[[i,4]]^2 SA`Casimir
 SA`DynkinRGE[getBlankSF[PART[Sc][[j+1]]],i]=sum^2; (* Gauge[[i,4]]^2 SA`Dynkin[getBlankSF[PART[Sc][[j+1]]],i]; *)
 
 
-(* ThS[i, PART[Sc][[j]]/. subGC[1]  /. subIndFinal[1,1] /. subRule ,PART[Sc][[j+1]]/. subGC[2]  /. subIndFinal[2,2] /. subRule,lor_]= I  Gauge[[i,4]]*SA`DynL[getBlankSF[PART[Sc][[j]]],i]*GUTren[i]*makeDeltaNS[PART[Sc][[j]],Gauge[[i,3]]];
-ThS[i, PART[Sc][[j+1]]/. subGC[1]  /. subIndFinal[1,1] /. subRule ,PART[Sc][[j]]/. subGC[2]  /. subIndFinal[2,2] /. subRule,lor_]=- I  Gauge[[i,4]]*SA`DynL[getBlankSF[PART[Sc][[j]]],i]*GUTren[i]*makeDeltaNS[PART[Sc][[j]],Gauge[[i,3]]];
+(* ThS[i, PART[Sc][[j]]/. subGC[1]  /. subIndFinal[1,1] /. subRule ,PART[Sc][[j+1]]/. subGC[2]  /. subIndFinal[2,2] /. subRule,lor_]= \[ImaginaryI]  Gauge[[i,4]]*SA`DynL[getBlankSF[PART[Sc][[j]]],i]*GUTren[i]*makeDeltaNS[PART[Sc][[j]],Gauge[[i,3]]];
+ThS[i, PART[Sc][[j+1]]/. subGC[1]  /. subIndFinal[1,1] /. subRule ,PART[Sc][[j]]/. subGC[2]  /. subIndFinal[2,2] /. subRule,lor_]=- \[ImaginaryI]  Gauge[[i,4]]*SA`DynL[getBlankSF[PART[Sc][[j]]],i]*GUTren[i]*makeDeltaNS[PART[Sc][[j]],Gauge[[i,3]]];
 ThS[i, PART[Sc][[j+1]]/. subGC[1]  /. subIndFinal[1,1] /. subRule ,PART[Sc][[j+1]]/. subGC[2]  /. subIndFinal[2,2] /. subRule,lor_]=0;
 ThS[i, PART[Sc][[j]]/. subGC[1]  /. subIndFinal[1,1] /. subRule ,PART[Sc][[j]]/. subGC[2]  /. subIndFinal[2,2] /. subRule,lor_]=0;
 *)
@@ -742,11 +748,11 @@ SA`DynkinS[rep,i]=SA`DynkinS[rep,i,k];
 SA`DynkinF[rep,i]=SA`DynkinF[rep,i,k];
 ];
 (*
-For[j=1,j<=AnzahlGauge,
+For[j=1,j\[LessEqual]AnzahlGauge,
 SA`CasimirDynkinS[rep,i,j,k]=
-Sum[SA`MulFactor[getBlankSF[PART[S][[n1]]],i]Sum[SA`gCoup[i,gNr2]GUTren[gNr2]If[SA`CheckU1[gNr2]==1,SA`DynL[getBlankSF[PART[S][[n1]]],gNr2],0],{gNr2,1,AnzahlGauge}] Sum[SA`gCoup[gNr2,k]GUTren[k]If[SA`CheckU1[gNr2]==1,SA`DynL[getBlankSF[PART[S][[n1]]],gNr2],0],{gNr2,1,AnzahlGauge}] SA`CasimirRGE[getBlankSF[PART[S][[n1]]],j],{n1,1,Length[PART[S]]}];
+Sum[SA`MulFactor[getBlankSF[PART[S][[n1]]],i]Sum[SA`gCoup[i,gNr2]GUTren[gNr2]If[SA`CheckU1[gNr2]\[Equal]1,SA`DynL[getBlankSF[PART[S][[n1]]],gNr2],0],{gNr2,1,AnzahlGauge}] Sum[SA`gCoup[gNr2,k]GUTren[k]If[SA`CheckU1[gNr2]\[Equal]1,SA`DynL[getBlankSF[PART[S][[n1]]],gNr2],0],{gNr2,1,AnzahlGauge}] SA`CasimirRGE[getBlankSF[PART[S][[n1]]],j],{n1,1,Length[PART[S]]}];
 SA`CasimirDynkinF[rep,i,j,k]=
-Sum[SA`MulFactor[getBlankSF[PART[F][[n1]]],i]Sum[SA`gCoup[i,gNr2]GUTren[gNr2]If[SA`CheckU1[gNr2]==1,SA`DynL[getBlankSF[PART[F][[n1]]],gNr2],0],{gNr2,1,AnzahlGauge}] Sum[SA`gCoup[gNr2,k]GUTren[k]If[SA`CheckU1[gNr2]==1,SA`DynL[getBlankSF[PART[F][[n1]]],gNr2],0],{gNr2,1,AnzahlGauge}] SA`CasimirRGE[getBlankSF[PART[F][[n1]]],j],{n1,1,Length[PART[F]]}];
+Sum[SA`MulFactor[getBlankSF[PART[F][[n1]]],i]Sum[SA`gCoup[i,gNr2]GUTren[gNr2]If[SA`CheckU1[gNr2]\[Equal]1,SA`DynL[getBlankSF[PART[F][[n1]]],gNr2],0],{gNr2,1,AnzahlGauge}] Sum[SA`gCoup[gNr2,k]GUTren[k]If[SA`CheckU1[gNr2]\[Equal]1,SA`DynL[getBlankSF[PART[F][[n1]]],gNr2],0],{gNr2,1,AnzahlGauge}] SA`CasimirRGE[getBlankSF[PART[F][[n1]]],j],{n1,1,Length[PART[F]]}];
 j++;];
 *)
 For[j=1,j<=AnzahlGauge,
@@ -806,7 +812,7 @@ gNr2++;];
 gNr1++;];
 i++;];
 
-(* Change to non SU (N) !! *)
+(* Change to non SU(N) !! *)
 
 For[k=1,k<=AnzahlGauge,
 SA`Dynkin[k] = Gauge[[k,4]]^2 Gauge[[k,2,1]];
@@ -843,8 +849,8 @@ GSijHat,Print["Calculate hat(gamma) for running VEVs"];
 For[i=1,i<=Length[fields],
 (*
 If[Head[Expand[fields[[i,2,1]]]]===Plus,
-res=GetNonZeroEntriesNS[Expand[fields[[i,2,1]]][[1]] /. Delta[gen1,a_]->1 /. Delta[a___,gen2,b___]->1,fields[[i,1]]];,
-res=GetNonZeroEntriesNS[fields[[i,2,1]] /. Delta[gen1,a_]->1 /. Delta[a___,gen2,b___]->1,fields[[i,1]]];
+res=GetNonZeroEntriesNS[Expand[fields[[i,2,1]]][[1]] /. Delta[gen1,a_]\[Rule]1 /. Delta[a___,gen2,b___]\[Rule]1,fields[[i,1]]];,
+res=GetNonZeroEntriesNS[fields[[i,2,1]] /. Delta[gen1,a_]\[Rule]1 /. Delta[a___,gen2,b___]\[Rule]1,fields[[i,1]]];
 ];
 *)
 
@@ -911,7 +917,7 @@ GSijHat,
 
 
 (*
-factor=DeleteCases[DeleteCases[fakeFac coup /. subNonZero,_?(MemberQ[{gt1,gt2,gt3,gt4},#]&),10] /. A_[]->1 /. Conj[x_]->x,_?(MemberQ[Transpose[parameters][[1]],#]&),10] /. fakeFac ->1;
+factor=DeleteCases[DeleteCases[fakeFac coup /. subNonZero,_?(MemberQ[{gt1,gt2,gt3,gt4},#]&),10] /. A_[]\[Rule]1 /. Conj[x_]\[Rule]x,_?(MemberQ[Transpose[parameters][[1]],#]&),10] /. fakeFac \[Rule]1;
 *)
 (* If[(subNonZero[[-1]]=!=PLUS && subNonZero[[-1]]=!=MINUS),*)
 If[SuperpositionNeeded=!=True,
@@ -932,9 +938,9 @@ betaFunction2L=betaFunction2L /. Delta2[a__]->1;
 subGenInd={}; nrInd=1;
 
 (*
-For[j=1,j<=4,
-If[FreeQ[fields[[i,1]],genf[j]]==False,
-subGenInd=Join[subGenInd,{genf[j]->ToExpression["i"<>ToString[nrInd]]}];
+For[j=1,j\[LessEqual]4,
+If[FreeQ[fields[[i,1]],genf[j]]\[Equal]False,
+subGenInd=Join[subGenInd,{genf[j]\[Rule]ToExpression["i"<>ToString[nrInd]]}];
 nrInd++;
 ];
 j++;]; 
@@ -945,7 +951,7 @@ If[NumericQ[fields[[i,1,j]]]===False,
 If[getGen[fields[[i,1,j]],ALL]>1,
 If[(getGen[fields[[i,1,j]],ALL]<99 ) || (getGenAux[getBlank[fields[[i,1,j]] ]] >1),
  torep=Join[torep,{Select[{gen1,gen2,gen3,gen4},(FreeQ[fields[[i,1,j]],#]==False)&][[1]]}]; 
-(* torep=Join[torep,Select[{gen1,gen2,gen3,gen4},(FreeQ[fields[[i,1,j]],#]==False)&][[Count[Take[fields[[i,1]],{1,j-1}],fields[[i,1,j]]]+1]]]; *)
+(* torep=Join[torep,Select[{gen1,gen2,gen3,gen4},(FreeQ[fields[[i,1,j]],#]\[Equal]False)&][[Count[Take[fields[[i,1]],{1,j-1}],fields[[i,1,j]]]+1]]]; *)
 ];
 ];
 ];

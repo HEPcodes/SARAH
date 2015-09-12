@@ -43,6 +43,9 @@
 
      Case(5)
       If (Int(wert).Ne.0) FermionMassResummation = .False.
+      
+     Case(6)
+       RXiNew = wert      
 
      Case(7)
        If (wert.eq.1) then

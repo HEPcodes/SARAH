@@ -55,7 +55,7 @@ i++;
 ];
 
 (*
-If[FreeQ[NameOfStates,InitalizedVertexCalculaton]==True,
+If[FreeQ[NameOfStates,InitalizedVertexCalculaton]\[Equal]True,
 Message[ModelFile::NoVertices];,
 *)
 If[FreeQ[NameOfStates,InitalizedVertexCalculaton]==True,
@@ -235,7 +235,7 @@ UfoLorentz[coup_,type_]:=Block[{i,res="",temp={},pos,clist},
 clist = Select[SA`UfoLorentzTypes,(#[[3]]===type)&];
 For[i=1,i<=Length[coup],
 If[Sum[Abs[coup[[i,1,j,2]]],{j,1,Length[coup[[i,1]]]}]=!=0,
-pos = Position[clist,coup[[i,2]] //.subUfoLorentz];
+pos = Position[clist,coup[[i,2]]//.subUfoLorentz];
 temp = Join[temp,{clist[[pos[[1,1]],2]]}];
 ];
 i++;];
@@ -298,24 +298,24 @@ SA`UfoCoupNr++;
 
 (*
 UfoCouplingOrder[coup_,type_]:=Block[{i,j, resC,temp,power},
-temp = coup  /. SA`subEW  /. conj[gEW]->gEW;
+temp = coup  /. SA`subEW  /. conj[gEW]\[Rule]gEW;
 If[temp===0,
 If[StringLength[ToString[type]]<4,
 Return["'QED':1"];,
 Return["'QED':2"];
 ];
 ];
-If[FreeQ[temp,gEW]==False,
-power = Intersection[Cases[temp,gEW^a_,10]  /. a_^b_->b];
+If[FreeQ[temp,gEW]\[Equal]False,
+power = Intersection[Cases[temp,gEW^a_,10]  /. a_^b_\[Rule]b];
 If[power==={} || StringLength[ToString[type]]<4,
 resC = "'QED':1";,
 resC = "'QED':"<>ToString[Min[power]];
 ];
 ];
 
-If[FreeQ[coup,strongCoupling]==False,
+If[FreeQ[coup,strongCoupling]\[Equal]False,
 If[Head[res]===String,resC=resC<>",";,resC="";];
-power = Intersection[Cases[temp,strongCoupling^a_,10]  /. a_^b_->b];
+power = Intersection[Cases[temp,strongCoupling^a_,10]  /. a_^b_\[Rule]b];
 If[power==={} || StringLength[ToString[type]]<4,
 resC =resC<> "'QCD':1";,
 resC = resC<>"'QCD':"<>ToString[Min[power]];
@@ -389,7 +389,8 @@ WriteString[UfoLF,"from function_library import complexconjugate,re,im,csc,sec,a
 For[i=1,i<=Length[ITypes],
 If[FreeQ[Exclude,ITypes[[i,1]]],
 If[Head[SA`VertexList[ITypes[[i,1]]]]===List &&SA`VertexList[ITypes[[i,1]]]=!={} && FreeQ[ITypes[[i]],A],
-temp = Intersection[Flatten[Table[Table[SA`VertexList[ITypes[[i,1]]][[j,k,2]],{k,2,Length[SA`VertexList[ITypes[[i,1]]][[j]]]}],{j,1,Length[SA`VertexList[ITypes[[i,1]]]]}]] //. subUfoLorentz];
+(* temp = Intersection[Flatten[Table[Table[SA`VertexList[ITypes[[i,1]]][[j,k,2]],{k,2,Length[SA`VertexList[ITypes[[i,1]]][[j]]]}],{j,1,Length[SA`VertexList[ITypes[[i,1]]]]}]] //. subUfoLorentz]; *)
+temp = Intersection[Flatten[Table[Table[SA`VertexList[ITypes[[i,1]]][[j,k,2]]/. Flatten[Replace[SA`VertexList[ITypes[[i,1]]][[j,1]] , a_ :>{Mom[a,b_]->P[b,Position[SA`VertexList[ITypes[[i,1]]][[j,1]],a][[1,1]]]},{1}]],{k,2,Length[SA`VertexList[ITypes[[i,1]]][[j]]]}],{j,1,Length[SA`VertexList[ITypes[[i,1]]]]}]] //. subUfoLorentz];
 temp = Reverse[temp];
 For[j=1,j<=Length[temp],
 WriteString[UfoLF,ToString[ITypes[[i,1]]]<>ToString[j]<>" = Lorentz(name = '"<>ToString[ITypes[[i,1]]]<>ToString[j]<>"', \n"];
@@ -478,7 +479,7 @@ Close[UfoPF];
 ];
 
 UfoForm[x_]:=Return[StringReplace[ToString[CForm[x  /. ReplacementsWO /. strongCoupling->G /. subGreek/. Mass[A_[{b_,c___}]]:>getMassW[A,b] /. Mass[A_]:>getMassW[A]]],{"^"->"**","conj"->"complexconjugate"}]]; 
-(* UfoForm[x_]:=Return[StringReplace[ToString[CForm[x  /. ReplacementsWO /. strongCoupling->G /. subGreek]],{"^"->"**"}]]; *)
+(* UfoForm[x_]:=Return[StringReplace[ToString[CForm[x  /. ReplacementsWO /. strongCoupling\[Rule]G /. subGreek]],{"^"->"**"}]]; *)
 
 
 ExpandUfo4[vlist_,prefac_]:=Block[{i,j,gf1,gf2,gf3,gf4,start1,start2,start3,start4,iter1,iter2,iter3,iter4,ff1,ff2,ff3,ff4,fstart1,fstart2,fstart3,fstart4,fiter1,fiter2,fiter3,fiter4,temp},
@@ -634,7 +635,7 @@ If[FreeQ[vlist,Delta[ft2,ft3]]==False, fstart3=Hold[fiter2]; ff3=Hold[fiter2];];
 
 If[FreeQ[vlist[[1]],bar]==False||FreeQ[vlist[[1]],conj]==False,subAntiLC={epsTensor->epsTensorBar};,subAntiLC={};];
 
-value =Table[{ExtractColor[prefac*conj[vlist[[i,1]]/.Complex[a_,b_]->Complex[a,-b]] /.fSU3[a__]->-fSU3[a]] /. subAntiLC,vlist[[i,2]] //. subUfoLorentz},{i,2,Length[vlist]}] //. sum[a_,b_,c_,d_]:>Sum[d,{a,b,c}] ;
+value =Table[{ExtractColor[prefac*conj[vlist[[i,1]]/.Complex[a_,b_]->Complex[a,-b]] /.fSU3[a__]->-fSU3[a]] /. subAntiLC,vlist[[i,2]] //. Flatten[Replace[vlist[[1]], a_ :>{Mom[a,b_]->P[b,Position[vlist[[1]],a][[1,1]]]},{1}]]//. subUfoLorentz},{i,2,Length[vlist]}] //. sum[a_,b_,c_,d_]:>Sum[d,{a,b,c}] ;
 temp={};
 
 
@@ -694,55 +695,55 @@ Generator[SU[3],{2,0}][a_,b_,c_]->T6[a,c,b]
 
 (*
 subUfoLorentz = {
-fSU3[a__]->f[a],
-fSU2[a__]->Eps[a],
-Mom[a_[{gt1,c___}],b_]->P[b,1],
-Mom[a_[{gt2,c___}],b_]->P[b,2],
-Mom[a_[{gt3,c___}],b_]->P[b,3],
-Mom[a_[{gt4,c___}],b_]->P[b,4],
+fSU3[a__]\[Rule]f[a],
+fSU2[a__]\[Rule]Eps[a],
+Mom[a_[{gt1,c___}],b_]\[Rule]P[b,1],
+Mom[a_[{gt2,c___}],b_]\[Rule]P[b,2],
+Mom[a_[{gt3,c___}],b_]\[Rule]P[b,3],
+Mom[a_[{gt4,c___}],b_]\[Rule]P[b,4],
 
-Mom[a_[{ct1,c___}],b_]->P[b,1],
-Mom[a_[{ct2,c___}],b_]->P[b,2],
-Mom[a_[{ct3,c___}],b_]->P[b,3],
-Mom[a_[{ct4,c___}],b_]->P[b,4],
+Mom[a_[{ct1,c___}],b_]\[Rule]P[b,1],
+Mom[a_[{ct2,c___}],b_]\[Rule]P[b,2],
+Mom[a_[{ct3,c___}],b_]\[Rule]P[b,3],
+Mom[a_[{ct4,c___}],b_]\[Rule]P[b,4],
 
-Mom[conj[a_[{gt1,c___}]],b_]->P[b,1],
-Mom[conj[a_[{gt2,c___}]],b_]->P[b,2],
-Mom[conj[a_[{gt3,c___}]],b_]->P[b,3],
-Mom[conj[a_[{gt4,c___}]],b_]->P[b,4],
+Mom[conj[a_[{gt1,c___}]],b_]\[Rule]P[b,1],
+Mom[conj[a_[{gt2,c___}]],b_]\[Rule]P[b,2],
+Mom[conj[a_[{gt3,c___}]],b_]\[Rule]P[b,3],
+Mom[conj[a_[{gt4,c___}]],b_]\[Rule]P[b,4],
 
-Mom[conj[a_[{ct1,c___}]],b_]->P[b,1],
-Mom[conj[a_[{ct2,c___}]],b_]->P[b,2],
-Mom[conj[a_[{ct3,c___}]],b_]->P[b,3],
-Mom[conj[a_[{ct4,c___}]],b_]->P[b,4],
+Mom[conj[a_[{ct1,c___}]],b_]\[Rule]P[b,1],
+Mom[conj[a_[{ct2,c___}]],b_]\[Rule]P[b,2],
+Mom[conj[a_[{ct3,c___}]],b_]\[Rule]P[b,3],
+Mom[conj[a_[{ct4,c___}]],b_]\[Rule]P[b,4],
 
-Mom[a_[{lt1,c___}],b_]->P[b,1],
-Mom[a_[{lt2,c___}],b_]->P[b,2],
-Mom[a_[{lt3,c___}],b_]->P[b,3],
-Mom[a_[{lt4,c___}],b_]->P[b,4],
+Mom[a_[{lt1,c___}],b_]\[Rule]P[b,1],
+Mom[a_[{lt2,c___}],b_]\[Rule]P[b,2],
+Mom[a_[{lt3,c___}],b_]\[Rule]P[b,3],
+Mom[a_[{lt4,c___}],b_]\[Rule]P[b,4],
 
-Mom[a_[{ct1,c___}],b_]->P[b,1],
-Mom[a_[{ct2,c___}],b_]->P[b,2],
-Mom[a_[{ct3,c___}],b_]->P[b,3],
-Mom[a_[{ct4,c___}],b_]->P[b,4],
+Mom[a_[{ct1,c___}],b_]\[Rule]P[b,1],
+Mom[a_[{ct2,c___}],b_]\[Rule]P[b,2],
+Mom[a_[{ct3,c___}],b_]\[Rule]P[b,3],
+Mom[a_[{ct4,c___}],b_]\[Rule]P[b,4],
 
-Mom[conj[a_[{lt1,c___}]],b_]->P[b,1],
-Mom[conj[a_[{lt2,c___}]],b_]->P[b,2],
-Mom[conj[a_[{lt3,c___}]],b_]->P[b,3],
-Mom[conj[a_[{lt4,c___}]],b_]->P[b,4],
+Mom[conj[a_[{lt1,c___}]],b_]\[Rule]P[b,1],
+Mom[conj[a_[{lt2,c___}]],b_]\[Rule]P[b,2],
+Mom[conj[a_[{lt3,c___}]],b_]\[Rule]P[b,3],
+Mom[conj[a_[{lt4,c___}]],b_]\[Rule]P[b,4],
 
-Mom[a_?AtomQ,b_]->P[b,2],
+Mom[a_?AtomQ,b_]\[Rule]P[b,2],
 
-ThetaStep[a__]->1,
+ThetaStep[a__]\[Rule]1,
 
-g[a__]->Metric[a],
-gamma[a_]-> Gamma[a,2,1],  
-Lam[a_,b_,c_]->2 T[a,c,b],
+g[a__]\[Rule]Metric[a],
+gamma[a_]\[Rule] Gamma[a,2,1],  
+Lam[a_,b_,c_]\[Rule]2 T[a,c,b],
 
-LorentzProduct[A_[b___,c_],B_[d_,e__]]-> A[b,-1] B[-1,e],
-PR->ProjP[2,1],
-PL->ProjM[2,1],   
-lt1->1, lt2->2, lt3->3, lt4->4
+LorentzProduct[A_[b___,c_],B_[d_,e__]]\[Rule] A[b,-1] B[-1,e],
+PR\[Rule]ProjP[2,1],
+PL\[Rule]ProjM[2,1],   
+lt1\[Rule]1, lt2\[Rule]2, lt3\[Rule]3, lt4\[Rule]4
 };*)
 
 subUfoLorentz = {

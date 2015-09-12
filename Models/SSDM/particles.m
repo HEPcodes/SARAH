@@ -47,6 +47,7 @@ ParticleDefinitions[GaugeES] = {
 	       PDG -> {6666635},
 	       PDG.IX -> {101000002},
                FeynArtsNr -> 10,
+               Mass -> LesHouches,               
                LaTeX -> "S",
                ElectricCharge -> 0,
                LHPC -> {"gold"},

@@ -123,3 +123,7 @@ DEFINITION[EWSB][DiracSpinors]={
  Cha ->{ Lm, conj[Lp]},
  Glu ->{ fG, conj[fG]}
 };
+
+
+(* Model not supported by CalcHep *)
+SetOptions[MakeAll, IncludeCalcHep->False];

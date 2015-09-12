@@ -525,14 +525,16 @@ WriteString[sphenoTree, "\n ! -------------------------------- \n"];
 WriteString[sphenoTree, "! Setting Goldstone masses \n"];
 WriteString[sphenoTree, "! -------------------------------- \n \n"];
 
-For[i=1,i<=Length[GoldstoneGhost],
+(*
+For[i=1,i\[LessEqual]Length[GoldstoneGhost],
 If[Head[GoldstoneGhost[[i,2]]]===Symbol,
-WriteString[sphenoTree,SPhenoMass[GoldstoneGhost[[i,2]],1]<>"="<>SPhenoMass[GoldstoneGhost[[i,1]],i] <>"\n" ];
-WriteString[sphenoTree,SPhenoMassSq[GoldstoneGhost[[i,2]],1]<>"="<>SPhenoMassSq[GoldstoneGhost[[i,1]],i] <>"\n" ];,
-WriteString[sphenoTree,SPhenoMass[GoldstoneGhost[[i,2,0]],GoldstoneGhost[[i,2,1,1]]]<>"="<>SPhenoMass[GoldstoneGhost[[i,1]],i] <>"\n" ];
-WriteString[sphenoTree,SPhenoMassSq[GoldstoneGhost[[i,2,0]],GoldstoneGhost[[i,2,1,1]]]<>"="<>SPhenoMassSq[GoldstoneGhost[[i,1]],i] <>"\n" ];
+WriteString[sphenoTree,SPhenoMass[GoldstoneGhost[[i,2]],1]<>"="<>SPhenoMass[GoldstoneGhost[[i,1]],i] <>"*sqrt("<>SPhenoForm[RXi[ToExpression[StringDrop[ToString[GoldstoneGhost[[i,1]]],1]]]]<>")\n" ];
+WriteString[sphenoTree,SPhenoMassSq[GoldstoneGhost[[i,2]],1]<>"="<>SPhenoMassSq[GoldstoneGhost[[i,1]],i] <>"*"<>SPhenoForm[RXi[ToExpression[StringDrop[ToString[GoldstoneGhost[[i,1]]],1]]]]<>"\n" ];,
+WriteString[sphenoTree,SPhenoMass[GoldstoneGhost[[i,2,0]],GoldstoneGhost[[i,2,1,1]]]<>"="<>SPhenoMass[GoldstoneGhost[[i,1]],i] <>"*sqrt("<>SPhenoForm[RXi[ToExpression[StringDrop[ToString[GoldstoneGhost[[i,1]]],1]]]]<>")\n" ];
+WriteString[sphenoTree,SPhenoMassSq[GoldstoneGhost[[i,2,0]],GoldstoneGhost[[i,2,1,1]]]<>"="<>SPhenoMassSq[GoldstoneGhost[[i,1]],i] <>"*"<>SPhenoForm[RXi[ToExpression[StringDrop[ToString[GoldstoneGhost[[i,1]]],1]]]]<>"\n" ];
 ];
 i++;];
+*)
 ];
 ];
 If[MassesForEffpot=!=True,
@@ -643,7 +645,8 @@ WriteString[sphenoTree, "\n \n "];
 
 WriteString[sphenoTree,"Do i1=2,"<>dimMatrix <>"\n"];
 WriteString[sphenoTree, "  Do i2 = 1, i1-1 \n"];
-If[FreeQ[realVar,ToExpression[MixingName]],
+(* If[FreeQ[realVar,ToExpression[MixingName]], *)
+If[conj[particle]=!=particle && FreeQ[realVar,ToExpression[MixingName]],
 WriteString[sphenoTree, "  mat(i1,i2) = Conjg(mat(i2,i1)) \n"];,
 WriteString[sphenoTree, "  mat(i1,i2) = mat(i2,i1) \n"];
 ];
@@ -823,7 +826,8 @@ WriteString[sphenoTree, "\n \n "];
 
 WriteString[sphenoTree,"Do i1=2,"<>dimMatrix <>"\n"];
 WriteString[sphenoTree, "  Do i2 = 1, i1-1 \n"];
-If[FreeQ[realVar,ToExpression[MixingName]],
+(* If[FreeQ[realVar,ToExpression[MixingName]],*)
+If[conj[particle]=!=particle && FreeQ[realVar,ToExpression[MixingName]],
 WriteString[sphenoTree, "  mat(i1,i2) = Conjg(mat(i2,i1)) \n"];,
 WriteString[sphenoTree, "  mat(i1,i2) = mat(i2,i1) \n"];
 ];
@@ -1592,7 +1596,7 @@ cGold=Select[gold,(FreeQ[#,scalars[[i]]]==False)&];
 If[Length[cGold]>1,cGold=Sort[cGold,(#1[[2,1,1]]<#2[[2,1,1]])&]];
 For[j=1,j<=Length[cGold],
 WriteStrong[sphenoTree,"! Search for Goldstone of "<>SPhenoForm[cGold[[j,1]]]<>"--- \n"];
-WriteString[sphenoTree,"pos = MinLoc(Abs("<>SPhenoForm[SPhenoMassSq[scalars[[i]]]]<>"-"<>SPhenoForm[SPhenoMassSq[cGold[[j,1]]]]<>"),1) \n"];
+WriteString[sphenoTree,"pos = MinLoc(Abs("<>SPhenoForm[SPhenoMassSq[scalars[[i]]]]<>"-"<>SPhenoForm[SPhenoMassSq[cGold[[j,1]]]RXi[ToExpression[StringDrop[ToString[cGold[[j,1]]],1]]]]<>"),1) \n"];
 WriteString[sphenoTree, "If (pos.ne."<>ToString[j]<>") Then \n"];
 mTemp= "M"<>SPhenoForm[scalars[[i]]]<>"temp";
 ZTemp= "Z"<>SPhenoForm[scalars[[i]]]<>"temp";

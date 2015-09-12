@@ -96,7 +96,7 @@ Unprotect[Power];
 
 (* TeXForm[x_Times]:=Block[{i,temp},
 temp="";
-For[i=1,i<=Length[x],
+For[i=1,i\[LessEqual]Length[x],
 If[Head[x[[i]]]===Plus,
 temp =temp<>"("<>ToString[TeXForm[x[[i]]]] <>")";,
 temp =temp<>ToString[TeXForm[x[[i]]]]<>" ";
@@ -526,7 +526,7 @@ Format[Delta[a_,b_], CForm]:=Format["Identity("<>ToString[a /. subindufo]<>","<>
 Format[fSU3[a_,b_,c_], CForm]:=Format["f("<>ToString[a/.subindufo]<>","<>ToString[b /.subindufo]<>","<>ToString[c/.subindufo]<>")",OutputForm]/;UfoActive==True;
 
 (*
-Format[epsTensor[a_,b_,c_], CForm]:=Format["Epsilon("<>ToString[a/.subindufo]<>","<>ToString[b /.subindufo]<>","<>ToString[c/.subindufo]<>")",OutputForm]/;UfoActive==True;
+Format[epsTensor[a_,b_,c_], CForm]:=Format["Epsilon("<>ToString[a/.subindufo]<>","<>ToString[b /.subindufo]<>","<>ToString[c/.subindufo]<>")",OutputForm]/;UfoActive\[Equal]True;
 *)
 
 
@@ -605,8 +605,8 @@ Format[ArcSin[x_],CForm]:=Format["cmath.asin("<>ToString[CForm[x]]<>")",OutputFo
 Format[ArcCos[x_],CForm]:=Format["cmath.acos("<>ToString[CForm[x]]<>")",OutputForm]/;UfoActive==True;
 Format[ArcTan[x_],CForm]:=Format["cmath.atan("<>ToString[CForm[x]]<>")",OutputForm]/;UfoActive==True;
 Format[Pi,CForm]:=Format["cmath.pi",OutputForm]/;UfoActive==True;
-(* Format[I,CForm]:=Format["j",OutputForm]/;UfoActive==True;
-Format[Complex[0,a_Integer],CForm]:=Format[ToString[a]<>"*j",OutputForm]/;UfoActive==True; *)
+(* Format[I,CForm]:=Format["j",OutputForm]/;UfoActive\[Equal]True;
+Format[Complex[0,a_Integer],CForm]:=Format[ToString[a]<>"*j",OutputForm]/;UfoActive\[Equal]True; *)
 Protect[Sin,Cos,Tan,Sqrt,Pi,Csc,Sec,ArcSec,ArcCsc,ArcSin, ArcCos, ArcTan,Power,Complex];
 ];
 
@@ -816,7 +816,7 @@ para=OpenWrite[ToFileName[$sarahCurrentOutputMainDir,"ParametersList.m"]];
 (*
 states = {GaugeES};
 
-For[i=1,i<=Length[Rotation],
+For[i=1,i\[LessEqual]Length[Rotation],
 states=Join[states,{Rotation[[i,1]]}];
 i++;
 ];
@@ -1042,7 +1042,7 @@ getLR[x_abs]:=5+getLR[x[[1]]];
 getLR[x_]:=Block[{},
 If[Head[Head[x]]==MatMul, Return[8+getLR[Plus@@x[[1]]]]];
 If[Head[x]==Integer, If[x>= 0,Return[1+Floor[Log[10.,Abs[x]]]], Return[2+Floor[Log[10.,Abs[x]]]]]];
-If[Head[x]==Complex, If[x/I>= 0,Return[1], Return[2]]];
+If[Head[x]==Complex, If[Im[x]>0 && Re[x]>0,Return[2], If[x/I>= 0,Return[1], Return[2]]]];
 If[Head[TeXLength[x]]===Integer,Return[TeXLength[x]]];
 If[Head[TeXLength[Head[x]]]===Integer,Return[TeXLength[Head[x]] + Plus@@getLR[Plus@@x]]];
 If[FreeQ[x,PL]==False || FreeQ[x,PR]==False, Return[getLR[x[[0]]]]];

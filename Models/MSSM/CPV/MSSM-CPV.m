@@ -124,4 +124,7 @@ DEFINITION[EWSB][DiracSpinors]={
 };	
 
 
+(* Model not supported by CalcHep *)
+SetOptions[MakeAll, IncludeCalcHep->False];
+
 

@@ -139,5 +139,7 @@ SpectrumFile= None;
 
 	
 
+(* Model not supported by SPheno *)
+SetOptions[MakeAll, IncludeSPheno->False];
 
 

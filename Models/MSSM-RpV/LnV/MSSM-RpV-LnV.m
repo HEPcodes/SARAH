@@ -152,5 +152,6 @@ makeOutput = {
 SpectrumFile= None;		
 
 	
-
+(* Model not supported by CalcHep [model file becomes too long] *)
+SetOptions[MakeAll, IncludeCalcHep->False];
 

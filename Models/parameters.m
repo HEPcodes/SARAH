@@ -643,7 +643,7 @@ ParameterDefinitionsMain = {
              
 {{Description -> "Theta'",
              LaTeX -> "{\\Theta'}_W",
-             DependenceNum ->ArcTan[(2 g1BL Sqrt[g1^2+g2^2])/(g1BL^2 + 16 (x1^2+x2^2)/(vd^2+vu^2) -g1^2-g2^2)]/2,
+             DependenceNum ->ArcTan[(2 g1BL Sqrt[g1^2+g2^2])/(g1BL^2 + 4 gBL^2 (x1^2+x2^2)/(vd^2+vu^2) -g1^2-g2^2)]/2,
              Real ->True,
              DependenceSPheno -> ArcCos[Abs[ZZ[3,3]]],
              OutputName-> TWp,

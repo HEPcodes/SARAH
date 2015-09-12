@@ -1,8 +1,9 @@
-Mathematica 7.0 for Linux x86 (64-bit)
-Copyright 1988-2008 Wolfram Research, Inc.
+Mathematica 9.0 for Linux x86 (64-bit)
+Copyright 1988-2013 Wolfram Research, Inc.
 
 In[1]:= SARAH (Private Version)
-by Florian Staub, 2014
+by Florian Staub, 2015
+contributions by M. D. Goodsell, K. Nickel
 
 References:
   Comput.Phys.Commun.181 (2010) 1077-1086. (arXiv:0909.2863[hep-ph])
@@ -177,7 +178,7 @@ Numerical calculations (if necessary)
 Checking for CP even and odd scalars
 
 All Done. Omega is ready!
-(Model initialized in 378.885s)
+(Model initialized in 239.906s)
 
 
 Are you unfamiliar with SARAH? Use SARAH`FirstSteps
@@ -214,12 +215,15 @@ Checking model for missing definitions
 
 CheckModelFiles::MissingParticle: 
    The following particle are not defined in ParticleDefinitions in
-     particles.m: {BinoR1, WinoLr1, GluR1, Fd1r1, Fu1r1, <<18>>, phiOmR, 
-     SDL0r1}
+     particles.m: {BinoR1, WinoLr1, GluR1, Fd1r1, Fu1r1, Fd2r1, Fu2r1, Fe1r1, 
+     FvL1, Fe2r1, FvR1, H0r1, HCr1, DL3r1, DL1r1, DL2r1, DR1r1, DR2r1, DR3r1, 
+     Om1r1, Om2r1, SomegaL0, sigmaOmR, phiOmR, SDL0r1}
 
 CheckModelFiles::MissingOutputName: 
    For the following particles is no OutputName defined: 
-    {BinoR1, WinoLr1, GluR1, Fd1r1, <<36>>, SDRmmR1, SDR0r1}
+    {BinoR1, WinoLr1, GluR1, Fd1r1, Fu1r1, Fd2r1, Fu2r1, Fe1r1, FvL1, Fe2r1, 
+     FvR1, H0r1, HCr1, DL3r1, DL1r1, DL2r1, DR1r1, <<17>>, SH0r1, SHCr1, 
+     SO1r1, SDLpR1, SDLppR1, SDL0r1, SDRmmR1, SDR0r1}
 
 CheckModelFiles::WrongPDG: 
    The number of PDG numbers defined for the following particles does not fit
@@ -231,7 +235,9 @@ CheckModelFiles::WrongPDGIX:
 
 CheckModelFiles::MissingOutputNameParameter: 
    For the following parameters is no OutputName defined: 
-    {gBL, g2, g3, Mdelta, B[Mdelta], <<46>>, UDL0, UDRmm, UDR0}
+    {gBL, g2, g3, Mdelta, B[Mdelta], Momega, B[Momega], Mu3, B[Mu3], T[a], 
+     T[f], YL, T[YL], T[AlphaOm], YQ, T[YQ], mqL2, mqR2, mlL2, <<26>>, UVR, 
+     UH0, UHC, UO1, UDLp, UDLpp, UDL0, UDRmm, UDR0}
 Generate Directories
 Building Particle List
 Calculate supersymmetric RGEs
@@ -280,7 +286,7 @@ Calculate Beta Functions for VEVs
  
 >   Dynamic[DynamicCoupProgess[VEV]])
 
-Finished with the calculation of the RGEs. Time needed: 384.43s
+Finished with the calculation of the RGEs. Time needed: 269.444s
 The results are saved in /home/fnstaub/Documents/Uni/SARAH/sarah4/Output/Omeg\
  
 >    a-Regime-1/RGEs/
@@ -313,7 +319,7 @@ Writing SPheno Shifts for Parameters
 --------------------------------------
 Subroutine for Shifts up and dowm
 
-Finished! SPheno code generated in 814.391s
+Finished! SPheno code generated in 514.801s
 Output saved in /home/fnstaub/Documents/Uni/SARAH/sarah4/Output/Omega-Regime-\
  
 >    1/EWSB/SPheno/
@@ -321,7 +327,7 @@ Output saved in /home/fnstaub/Documents/Uni/SARAH/sarah4/Output/Omega-Regime-\
 The following steps are now necessary to implement the model in SPheno: 
   1. Copy the created files to a new subdirectory "/Omega" of your SPheno\
  
->    3.3.0 (or later) installation
+>    3.3.6 (or later) installation
   2. Compile the model by using 
         make Model=Omega
      in the main directory of SPheno

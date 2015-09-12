@@ -23,7 +23,7 @@ ParameterDefinitions = {
 
 {TBetaP,  { LaTeX -> "\\tan(\\beta')",
              Dependence ->  None, 
-             LesHouches -> None,
+             LesHouches -> {BL,80},
              OutputName -> TBp     }},   
 
 {ZVR,        { LaTeX -> "Z^R",

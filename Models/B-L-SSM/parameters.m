@@ -18,7 +18,7 @@ ParameterDefinitions = {
 
 {TBetaP,  { LaTeX -> "\\tan(\\beta')",
              Real ->  True, 
-             LesHouches -> None,
+             LesHouches ->  {BL,80},
              OutputName -> TBp     }},                 
                
 
