@@ -19,13 +19,13 @@
 
 
 
-GenerateSPhenoSusyDecays[Eigenstates_]:=Block[{i},
+GenerateSPhenoTreeLevelDecays[Eigenstates_]:=Block[{i},
 (*
 Print["--------------------------------------"];
 Print["Writing Two Body Decays for SPheno "];
 Print["--------------------------------------"];
 *)
-Print[StyleForm["Write decays and branching ratios","Section",FontSize->12]];
+Print[StyleForm["Write tree-level decays","Section",FontSize->12]];
 Particles[Current]=Particles[Eigenstates];
 
 MakeCouplingLists;
@@ -33,7 +33,7 @@ MakeCouplingLists;
 
 (* $sarahCurrentSPhenoDir=ToFileName[{$sarahCurrentOutputDir,"SPheno"}]; *)
 (* CreateDirectory[$sarahCurrentSPhenoDir]; *)
-sphenoDecay=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"SusyDecays_"<>ModelName<>".f90"]];
+sphenoDecay=OpenWrite[ToFileName[$sarahCurrentSPhenoDir,"TreeLevel_Decays_"<>ModelName<>".f90"]];
 
 WriteHeaderDecays;
 
@@ -77,7 +77,7 @@ Dynamic3BDpart="All Done";
 
 AppendSourceCode["ScalarToTwoVectorbosons.f90",sphenoDecay];
 
-WriteString[sphenoDecay, "End Module SusyDecays_"<>ModelName<>" \n \n"];
+WriteString[sphenoDecay, "End Module TreeLevelDecays_"<>ModelName<>" \n \n"];
 
 Close[sphenoDecay];
 
@@ -120,7 +120,7 @@ i++;];
 WriteHeaderDecays:=Block[{},
 WriteCopyRight[sphenoDecay];
 
-WriteString[sphenoDecay, "Module SusyDecays_"<>ModelName<>"\n \n"];
+WriteString[sphenoDecay, "Module TreeLevelDecays_"<>ModelName<>"\n \n"];
 WriteString[sphenoDecay, "Use Control \n"];
 WriteString[sphenoDecay, "Use DecayFunctions \n"];
 WriteString[sphenoDecay, "Use LoopCouplings_"<>ModelName<>" \n"];
@@ -191,7 +191,7 @@ savedDecayInfos = Join[savedDecayInfos,{{particle,NeededCouplings,NeededMasses,F
 channels=CountNumberEntries[FullInformation];
 (*
 channels=0;
-For[i=1,i<=Length[FullInformation],
+For[i=1,i\[LessEqual]Length[FullInformation],
 channels += (1+getGenSPheno[FullInformation[[i,1]]]-getGenSPhenoStart[FullInformation[[i,1]]])*(1+getGenSPheno[FullInformation[[i,2]]]-getGenSPhenoStart[FullInformation[[i,2]]]);
 i++;];
 *)
