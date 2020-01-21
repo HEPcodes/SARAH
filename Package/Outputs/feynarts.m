@@ -57,7 +57,7 @@ SA`Doc`File = "Package/Outputs/feynarts.nb";
 SA`Doc`Name = "\!\(\*
 StyleBox[\"MakeFeynArtsFunc\",\nInitializationCell->True]\)";
 SA`Doc`Info = "The main function to generate the FeynArts output. It creates the necessary directory and calls all necessary functions.";
-SA`Doc`Input={"AddCouterT"->"Adding counter terms to vertices?","CTList"->"List of defined counter terms","IncludeWFRs"->"Include wave-function renormalization?","CTdepPre"->"ASK MARTIN","CTdepPost"->"ASK MARTIN","dosums"->"expand all sums over indices in the vertices","eigS"->"considered eigenstates","read"->"read the vertices from a previous calclation?"};
+SA`Doc`Input={"AddCounterT"->"Adding counter terms to vertices? If set to True all parameters X in the vertices are shifted X->X+dX and expanded in dX. If the variable SA`FAgenericCTs is set to True, the counter term of Vertex[field1,field2,..] is set to SACounterTerm[field1,field2,...]","CTList"->"List of defined counter terms e.g. {{Yu[a,b], dY IndexDelta[3,a]IndexDelta[3,b]}}","IncludeWFRs"->"Include wave-function renormalization? Either set to True/False or give a list of fields, e.g. {hh,Hpm,conj[Hpm],conj[hh]}","CTdepPre"->"replacements that are made before counterterms are calculated i.e. reparametrise vertices before expansion","CTdepPost"->"replacements that are made after counterterms are calculated","dosums"->"expand all sums over indices before the counterterm calculation","eigS"->"considered eigenstates","read"->"read the vertices from a previous calclation?"};
 SA`Doc`GenerateEntry[];
 
 startedtime=TimeUsed[];
@@ -1226,7 +1226,7 @@ SA`Doc`File = "Package/Outputs/feynarts.nb";
 SA`Doc`Name = "\!\(\*
 StyleBox[\"ExpandCTfa\",\nInitializationCell->True]\)";
 SA`Doc`Info = "Expand a counter-term vertices and collects the terms linear in 'delta'. Moreover, it adds the WFR terms.";
-SA`Doc`Input={"vert"->"The considered vertex","fields"->"The involved particles","fieldinidces"->"The indices of the involved particles","couplingid"->"ASK MARTIN"};
+SA`Doc`Input={"vert"->"The considered vertex","fields"->"The involved particles","fieldinidces"->"The indices of the involved particles","couplingid"->"Unique identifier (integer) for generic couplings. Only important if SA`FAgenericCTs is set to True, to distinguish chiralities and polarisations."};
 SA`Doc`GenerateEntry[];
 
 If[SA`FAgenericCTs=!=True,

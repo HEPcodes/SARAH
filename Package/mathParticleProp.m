@@ -2448,10 +2448,10 @@ temp = WidthUsed[x[gen]] /. Flatten[Table[Width[NameOfStates[[i]]],{i,1,Length[N
 ];
 ];
 If[NumberQ[temp],
-SA`Return[temp];,
+Return[temp];,
 If[Head[temp]===WidthUsed,
-SA`Return[1];,
-SA`Return[External];
+Return[1];,
+Return[External];
 ];
 ];
 ];

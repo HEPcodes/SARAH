@@ -3,7 +3,7 @@
 
 ### Authors
 
-   F. Staub
+   F. Staub, with M. Goodsell and W. Porod as maintainers
 
 ### References
 

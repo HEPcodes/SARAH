@@ -189,21 +189,21 @@ realVar=Join[realVar,{gh,vb}];
 (* now the ugly part: *)
 (* generate substitutions like: sum_\alpha T^\alpha V^\alpha \[Rule] sum_x T^x V1^x + sum_y T^{y+N_x} V2^y  + sum_z T^{z+N_x + N_z} V2^z ... +  *)
 (* where T are the generators and alpha the charge indices for the full group, while x,y,.. the indices for the unbroken subgroup *)
-subGaugeBosonsAux=Join[subGaugeBosonsAux,{sum[a,___] conj[TA[dim,a,i1_,i2_]] vb[{a,b}]->(Sum[sum[name,1,RepGaugeBosons[[i,k,2]]] conj[TA[dim,name+Sum[RepGaugeBosons[[i,j,2]],{j,1,k-1}],i1,i2]] If[RepGaugeBosons[[i,k,2]]>1,RepGaugeBosons[[i,k,1]][{a,name,b}],RepGaugeBosons[[i,k,1]][{a,b}]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
-subGaugeBosonsAux=Join[subGaugeBosonsAux,{sum[a,___] TA[dim,a,i1_,i2_] vb[{a,b}]->(Sum[sum[name,1,RepGaugeBosons[[i,k,2]]] TA[dim,name+Sum[RepGaugeBosons[[i,j,2]],{j,1,k-1}],i1,i2] If[RepGaugeBosons[[i,k,2]]>1,RepGaugeBosons[[i,k,1]][{a,name,b}],RepGaugeBosons[[i,k,1]][{a,b}]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
+subGaugeBosonsAux=Join[subGaugeBosonsAux,{sum[a,___] conj[TA[dim,a,i1_,i2_]] vb[{a,b}]->(Sum[sum[name,1,Abs[RepGaugeBosons[[i,k,2]]]] conj[TA[dim,name+Sum[Abs[RepGaugeBosons[[i,j,2]]],{j,1,k-1}],i1,i2]] If[Abs[RepGaugeBosons[[i,k,2]]]>1,RepGaugeBosons[[i,k,1]][{a,name,b}],RepGaugeBosons[[i,k,1]][{a,b}]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
+subGaugeBosonsAux=Join[subGaugeBosonsAux,{sum[a,___] TA[dim,a,i1_,i2_] vb[{a,b}]->(Sum[sum[name,1,Abs[RepGaugeBosons[[i,k,2]]]] TA[dim,name+Sum[Abs[RepGaugeBosons[[i,j,2]]],{j,1,k-1}],i1,i2] If[Abs[RepGaugeBosons[[i,k,2]]]>1,RepGaugeBosons[[i,k,1]][{a,name,b}],RepGaugeBosons[[i,k,1]][{a,b}]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
 
-subGhostsAux=Join[subGhostsAux,{sum[a,___] conj[TA[dim,a,i1_,i2_]] gh[{a}]->(Sum[sum[name,1,RepGaugeBosons[[i,k,2]]] conj[TA[dim,name+Sum[RepGaugeBosons[[i,j,2]],{j,1,k-1}],i1,i2]] If[RepGaugeBosons[[i,k,2]]>1,ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]][{name}],ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
-subGhostsAux=Join[subGhostsAux,{sum[a,___] TA[dim,a,i1_,i2_] gh[{a}]->(Sum[sum[name,1,RepGaugeBosons[[i,k,2]]] TA[dim,name+Sum[RepGaugeBosons[[i,j,2]],{j,1,k-1}],i1,i2] If[RepGaugeBosons[[i,k,2]]>1,ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]][{name}],ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
+subGhostsAux=Join[subGhostsAux,{sum[a,___] conj[TA[dim,a,i1_,i2_]] gh[{a}]->(Sum[sum[name,1,Abs[RepGaugeBosons[[i,k,2]]]] conj[TA[dim,name+Sum[Abs[RepGaugeBosons[[i,j,2]]],{j,1,k-1}],i1,i2]] If[Abs[RepGaugeBosons[[i,k,2]]]>1,ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]][{name}],ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
+subGhostsAux=Join[subGhostsAux,{sum[a,___] TA[dim,a,i1_,i2_] gh[{a}]->(Sum[sum[name,1,Abs[RepGaugeBosons[[i,k,2]]]] TA[dim,name+Sum[Abs[RepGaugeBosons[[i,j,2]]],{j,1,k-1}],i1,i2] If[Abs[RepGaugeBosons[[i,k,2]]]>1,ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]][{name}],ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
 
 
 (* and now the replacement for the terms with structure constant *)
-subGaugeBosonsAuxFabc=Join[subGaugeBosonsAuxFabc,{sum[a,___]FST[dim][i1___,a,i2___] vb[{a,b}]->(Sum[sum[name,1,RepGaugeBosons[[i,k,2]]] FST[dim][i1,name+Sum[RepGaugeBosons[[i,j,2]],{j,1,k-1}],i2] If[RepGaugeBosons[[i,k,2]]>1,RepGaugeBosons[[i,k,1]][{a,name,b}],RepGaugeBosons[[i,k,1]][{a,b}]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
+subGaugeBosonsAuxFabc=Join[subGaugeBosonsAuxFabc,{sum[a,___]FST[dim][i1___,a,i2___] vb[{a,b}]->(Sum[sum[name,1,Abs[RepGaugeBosons[[i,k,2]]]] FST[dim][i1,name+Sum[Abs[RepGaugeBosons[[i,j,2]]],{j,1,k-1}],i2] If[Abs[RepGaugeBosons[[i,k,2]]]>1,RepGaugeBosons[[i,k,1]][{a,name,b}],RepGaugeBosons[[i,k,1]][{a,b}]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
 
-(*and now the replacement for the terms with structure constant*)subGhostsAuxFabc=Join[subGhostsAuxFabc,{sum[a,___]FST[dim][ii1___,a,ii2___] gh[{a}]->(Sum[sum[name,1,RepGaugeBosons[[i,k,2]]] FST[dim][ii1,name+Sum[RepGaugeBosons[[i,j,2]],{j,1,k-1}],ii2] If[RepGaugeBosons[[i,k,2]]>1,ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]][{name}],ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
+(*and now the replacement for the terms with structure constant*)subGhostsAuxFabc=Join[subGhostsAuxFabc,{sum[a,___]FST[dim][ii1___,a,ii2___] gh[{a}]->(Sum[sum[name,1,Abs[RepGaugeBosons[[i,k,2]]]] FST[dim][ii1,name+Sum[Abs[RepGaugeBosons[[i,j,2]]],{j,1,k-1}],ii2] If[Abs[RepGaugeBosons[[i,k,2]]]>1,ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]][{name}],ToExpression["g"<>StringDrop[ToString[RepGaugeBosons[[i,k,1]]],1]]],{k,1,Length[RepGaugeBosons[[i]]]}])}];
 
 
 (* for VVV we need the replacement wiht derivatives *)
-subGaugeBosonsAuxFabc=Join[subGaugeBosonsAuxFabc,{Der[sum[a,___],l_]FST[dim][i1___,a,i2___] Der[vb[{a,b}],l_]->(Sum[Der[sum[name,1,RepGaugeBosons[[i,k,2]]],l] FST[dim][i1,name+Sum[RepGaugeBosons[[i,j,2]],{j,1,k-1}],i2] Der[If[RepGaugeBosons[[i,k,2]]>1,RepGaugeBosons[[i,k,1]][{a,name,b}],RepGaugeBosons[[i,k,1]][{a,b}]],l],{k,1,Length[RepGaugeBosons[[i]]]}])}];
+subGaugeBosonsAuxFabc=Join[subGaugeBosonsAuxFabc,{Der[sum[a,___],l_]FST[dim][i1___,a,i2___] Der[vb[{a,b}],l_]->(Sum[Der[sum[name,1,Abs[RepGaugeBosons[[i,k,2]]]],l] FST[dim][i1,name+Sum[Abs[RepGaugeBosons[[i,j,2]]],{j,1,k-1}],i2] Der[If[Abs[RepGaugeBosons[[i,k,2]]]>1,RepGaugeBosons[[i,k,1]][{a,name,b}],RepGaugeBosons[[i,k,1]][{a,b}]],l],{k,1,Length[RepGaugeBosons[[i]]]}])}];
 i++;];
 
 (* Substitution for names of charges *)
@@ -627,7 +627,7 @@ ReleaseHold[temp];
 (* Set the group constants *)
 For[j2=1,j2<=Length[AuxGauge],
 valueDimensions=AuxDimFields[[Position[AuxDimFields,namefield /. A_[b__Symbol]->A][[1,1]]]][[2,2]];
-If[FreeQ[Fields[[i,1]],conj]==True,
+If[FreeQ[Fields[[i,1]],conj[namefield]]==True,
 valueDyn=getDynkinLabels[valueDimensions,AuxGauge[[j2,2]]];,
 valueDyn=ConjugatedRep[getDynkinLabels[valueDimensions,AuxGauge[[j2,2]]],AuxGauge[[j2,2]]];
 ];
