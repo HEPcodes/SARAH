@@ -33,8 +33,7 @@ ReplacementIndices[old_,new_] := Module[{i,oldS,newS,x},
 ];
 
 
-Colorfactor[fields_]:=If[AnyTrue[fields,FreeQ[getIndizes[#] ,color]&]||Length[fields]===0,1,getColorDim[fields[[1]]]]; (* changed by FS *)
-
+Colorfactor[fields_]:=If[AllTrue[fields, FreeQ[getIndizes[#], color] &]||Length[fields]===0,1,Max[getColorDim[#]&/@fields]];
 
 Clear[setMasses];
 setMasses[masses_:None] := Module[
@@ -64,6 +63,21 @@ EffPot1Loop[m2_:{}, norm_:1/4,MSDR_:3/2]:=norm Sum[m[[i]]^2*(Log[m[[i]]/UVscaleQ
 (* effectively assign factor 2 if charged particles are in the loop *)
 SA`CheckSameVertices=False;
 
+(* abbreviations for topologies *)
+TopoNotation=Join[(#->#)&/@(GenericScalarCouplings//Keys)
+,{
+    SA      -> {SA[4]},
+    SB      -> {SB[4]},
+    S       -> {SA[4],SB[4]},
+    A       -> {A[2]},
+    B[4][2] -> {B[4][2][1],B[4][2][2]},
+    B[4]    -> {B[4][2][1],B[4][2][2],B[4][1]},
+    B       -> {B[2],B[3],B[4][1],B[4][2][1],B[4][2][2]},
+    T[4]    -> {T[4][1],T[4][2]},
+    T       -> {T[2],T[3],T[4][1],T[4][2]},
+    C[4]    -> {C[4][1],C[4][2]},
+    C       -> {C[3],C[4][1],C[4][2]}
+}];
 
 Clear[SelectTopologies]
 SelectTopologies[m_Integer, OptionsPattern[EFTcoupNLO]]:=Module[
@@ -76,22 +90,6 @@ SelectTopologies[m_Integer, OptionsPattern[EFTcoupNLO]]:=Module[
     If[m==4, AppendTo[TopsAvail,D]];
     If[Length[TopsAvail]==0, Print["No Topologies for ",m,"-point function! Can only compute renormalizable couplings!"];Return[{}]];
  
-    (* abbreviations for topologies *)
-    TopoNotation=Join[(#->#)&/@(GenericScalarCouplings//Keys)
-    ,{
-        SA      -> {SA[4]},
-        SB      -> {SB[4]},
-        S       -> {SA[4],SB[4]},
-        A       -> {A[2]},
-        B[4][2] -> {B[4][2][1],B[4][2][2]},
-        B[4]    -> {B[4][2][1],B[4][2][2],B[4][1]},
-        B       -> {B[2],B[3],B[4][1],B[4][2][1],B[4][2][2]},
-        T[4]    -> {T[4][1],T[4][2]},
-        T       -> {T[2],T[3],T[4][1],T[4][2]},
-        C[4]    -> {C[4][1],C[4][2]},
-        C       -> {C[3],C[4][1],C[4][2]}
-    }];
-
     If[Tops == {},
         If[OptionValue[Topologies]=!={}, Return[{}]];
         TopsFiltered = TopsAvail;
@@ -261,7 +259,7 @@ InsertVertices[diag_,m_,Topology->topo_, OptionsPattern[EFTcoupNLO]]:=Module[
     FieldTypesList = (getType[#]&/@(InternalFields/.diag[[2]]))//Sort;
     FieldTypes = If[NumInternalFields>0,ToSymbol[FieldTypesList],None];
     SumIterators=If[NumInternalFields>0,Table[{IndexInternal[s]/.diag[[2]],1,getGen[Internal[s]/.diag[[2]]]},{s,1,NumInternalFields}],{{dummyidx,1,1}}];
-
+    
 
     Do[
         genericcoupling = genericvert/.{ (* C[Internal[1],...] *)
@@ -310,6 +308,14 @@ InsertVertices[diag_,m_,Topology->topo_, OptionsPattern[EFTcoupNLO]]:=Module[
         ,
         amp = OptionValue[LoopFactor] amp;
     ];
+
+    (*
+       diagrams that include vectors but have vanishing MS-DR contributions must not be included as they cancel anyways in the sum
+       (see also paragraph 3.3 of 1810.09388)
+       TODO: momentum flow of e.g. SSV vertices is not considered and thus the cancelation does not happen because of a missing sign
+       (this will be important for heavy vectors but not for MS-DR conversion (?) since its quadratic).
+    *)
+    If[MemberQ[FieldTypesList,V] && msdr === 0, amp=0]; 
 
     If[$ReturnLists,
         If[MSDRNeeded[OptionValue[ShiftMSDR]]===2 && msdr===0, Return[{}]];
@@ -499,43 +505,55 @@ calculation of all involved diagrams for (off)diagonal WFR terms:
     DeltaZ_ii = treelevel * Re(del(2_point_function)_ii)
     DeltaZ_ij = treelevel * 2 Re(2_point_function_ij)/(mi^-mj^2)
 *)
+
 Clear[WFRCorrectedAmp]
-WFRCorrectedAmp[exF__, OptionsPattern[EFTcoupNLO]] := Module[
-	{
-    WFROff = 0, WFRDiag = 0, WFR = 0,
+WFRCorrectedAmp[extF__,OptionsPattern[EFTcoupNLO]]:=Module[
+    {
+    WFROff = 0, WFRDiag = 0, WFR=0, norm = 1,
     TreeDiagrams, SelfDiagrams, FieldsToInsert,
-    opts, replopts
-	},
-    If[Length[exF]<3,Return[0]];   
-    replopts = <|"IncludeTreeLevel" -> True, ShowProgress -> False, GaugeThresholds -> False, ShiftMSDR-> 0, Topologies -> {T}|>;
-    opts = Sequence@@(getOpts[EFTcoupNLO, replopts]/.opt[z_] :> OptionValue[z]);
-   
-    (*replace external legs with generic legs, one at a time*)
-    TreeDiagrams = Table[GAi[ReplacePart[exF, i -> FieldToInsert[exF[[i]]]], OPTSi], {i, 1, Length[exF]}];
-   
-	(*Z-factors for external leg and generic leg*)
-	SelfDiagrams = Table[WFi[conj[FieldToInsert[exF[[i]]]], exF[[i]], OPTSi], {i, 1, Length[exF]}];
-    
-	(*fields to insert into generic legs*)
-   	FieldsToInsert = Flatten[Table[#[i], {i, 1, getGen[#]}]&/@If[conj[#] === #, {#}, {#, conj[#]}]&/@Select[Particles[Current] //. diracSubBack[ALL], RE[#[[4]]] === S &][[All, 1]]];
-   
-    (* multiply Z-factor with tree diagrams and sum over generic legs*)
-    WFRDiag = Select[Sum[TreeDiagrams.SelfDiagrams/.FieldToInsert[i_] :> If[j === i, j, NoField], {j, FieldsToInsert}], FreeQ[#, NoField] &];
-    WFROff = Select[Sum[TreeDiagrams.SelfDiagrams/.FieldToInsert[i_] :> If[j =!= i, j, NoField], {j, FieldsToInsert}], FreeQ[#, NoField] &];
-   
-	If[!MemberQ[OptionValue[ExcludeTopologies], DiagonalWFRs],
-        If[OptionValue[Topologies] =!= {} && !MemberQ[OptionValue[Topologies], DiagonalWFRs],WFRDiag=0];
-    	WFR += 1/2 WFRDiag/.OPTSi -> opts/.GAi -> getAmplitude/.WFi -> WFRConstant;
-	];
-	If[!MemberQ[OptionValue[ExcludeTopologies], OffdiagonalWFRs], 
-        If[OptionValue[Topologies] =!= {} && !MemberQ[OptionValue[Topologies], DiagonalWFRs],WFROff=0];
-		WFR += 1/2 WFROff/.OPTSi -> opts/.GAi -> getAmplitude/.WFi -> WFRConstant;
-	];
-    
-	Return[WFR//.$AllSimplifications];
+    opts,replopts,perms
+    },
+
+    (*determine summation over field permutations*)
+    Switch[Length[extF],
+    1,Return[0];,
+    2,Return[0];,
+    3,perms = {extF};,
+    4,perms = Permutations[extF];
+      norm = Factorial[Length[extF]]/Times@@((Count[extF,#]!)&/@DeleteDuplicates[extF]);,
+    ___,Return[0];
+    ];
+
+    replopts=<|"IncludeTreeLevel"->True,ShowProgress->False,GaugeThresholds->False,ShiftMSDR->0,Topologies->{T}|>;
+    opts=Sequence@@(getOpts[EFTcoupNLO,replopts]/.opt[z_]:>OptionValue[z]);
+
+
+    Do[
+        (*replace external legs with generic legs,one at a time*)
+        TreeDiagrams=Table[GAi[ReplacePart[exF,i->FieldToInsert[exF[[i]]]],OPTSi],{i,1,Length[exF]}];
+        
+        (*Z-factors for external leg and generic leg*)
+        SelfDiagrams=Table[WFi[conj[FieldToInsert[exF[[i]]]],exF[[i]],OPTSi],{i,1,Length[exF]}];
+        
+        (*fields to insert into generic legs*)
+        FieldsToInsert=Flatten[Table[#[i],{i,1,getGen[#]}]&/@If[conj[#]===#,{#},{#,conj[#]}]&/@Select[Particles[Current]//.diracSubBack[ALL],RE[#[[4]]]===S&][[All,1]]];
+        
+        (*multiply Z-factor with tree diagrams and sum over generic legs*)
+        WFRDiag=Select[Sum[TreeDiagrams.SelfDiagrams/.FieldToInsert[i_]:>If[j===i,j,NoField],{j,FieldsToInsert}],FreeQ[#,NoField]&];
+        WFROff=Select[Sum[TreeDiagrams.SelfDiagrams/.FieldToInsert[i_]:>If[j=!=i,j,NoField],{j,FieldsToInsert}],FreeQ[#,NoField]&];
+        
+        If[!MemberQ[OptionValue[ExcludeTopologies],DiagonalWFRs],
+            If[OptionValue[Topologies]=!={}&&!MemberQ[OptionValue[Topologies],DiagonalWFRs],WFRDiag=0];
+            WFR+=1/2 WFRDiag/.OPTSi->opts/.GAi->getAmplitude/.WFi->WFRConstant;
+        ];
+        
+        If[!MemberQ[OptionValue[ExcludeTopologies],OffdiagonalWFRs],
+            If[OptionValue[Topologies]=!={}&&!MemberQ[OptionValue[Topologies],DiagonalWFRs],WFROff=0];
+            WFR+=1/2 WFROff/.OPTSi->opts/.GAi->getAmplitude/.WFi->WFRConstant;
+        ];
+    ,{exF,perms}];
+    Return[1/norm WFR//.$AllSimplifications];
 ];
-
-
 
 (* ::Subsection:: *)
 (*Output for MakeSPheno*)
@@ -568,14 +586,15 @@ GenerateSelfDefinedFuntion[funcname_String, func_, OptionsPattern[GenerateSPheno
     functionbody = expr//SPhenoForm//FortranLineBreak;
     
     (* get all variables and function arguments *)
-    varsRAW = DeleteCases[Variables@Level[expr, {-Infinity,Infinity}],UVscaleQ];
+    varsRAW = Variables@Level[expr, {-Infinity,Infinity}];
     vars = Join[Select[varsRAW,SymbolQS[#]&],Cases[varsRAW,_[__Integer]]]//Sort;
     arguments = (#/.F_[___]:>F&/@vars);
     real = Select[vars, conj[#]==#&];
     complex = DeleteCases[Complement[vars,real],UVscaleQ];
-    
-    Sargs = Join[arguments,{UVscaleQ}]//ListToString//FortranLineBreak;
-    Sreal = If[Length[real]>0,"Real(dp),Intent(in) :: " <>(Join[real,{UVscaleQ}]/.A_[b__Integer]->A//ListToStringDim[#,expr]& //FortranLineBreak),""];
+    If[!FreeQ[expr, UVscaleQ] && FreeQ[real, UVscaleQ], AppendTo[real, UVscaleQ]];
+
+    Sargs = arguments//ListToString//FortranLineBreak;
+    Sreal = If[Length[real]>0,"Real(dp),Intent(in) :: " <>(real/.A_[b__Integer]->A//ListToStringDim[#,expr]& //FortranLineBreak),""];
     Scomplex = If[Length[complex]>0,"Complex(dp),Intent(in) :: " <> (complex/.A_[b__Integer]->A//ListToStringDim[#,expr]& //FortranLineBreak),""];
     fortran = "
 
@@ -664,7 +683,7 @@ GenerateSPhenodotm[EFTmodel_String,OptionsPattern[]]:=Module[
         func = c[[2]];
         funcname = "EFTcoupling" <> ToString[i];
         info = GenerateSelfDefinedFuntion[funcname, func, opts];
-        funccall = funcname <> "[" <> ListToString[Join[info["Arguments"],{mGUT}]] <> "]";
+        funccall = funcname <> "[" <> ListToString[info["Arguments"]] <> "]";
         ComplexParameters = Union[ComplexParameters,info["ComplexParameters"]];
         RealParameters = Union[RealParameters,info["RealParameters"]];
         funcfilename = funcname <> "_" <> StringReplace[sphenofilename,".m"->""] <> ".f90"; 
@@ -729,13 +748,16 @@ GenerateSPhenoFiles:=Block[{i,sphenofilename},
     
   
     
+    If[Head[$SPhenoBoundaryHighScale]==Symbol,$SPhenoBoundaryHighScale={}]; 
     WriteString[sphenofile, " BoundaryHighScale = "<>ToString[InputForm[$SPhenoBoundaryHighScale]]<>";\n\n\n"];
-    
+
+    If[Head[$SPhenoBoundaryRenScale]==Symbol,$SPhenoBoundaryRenScale={}]; 
     WriteString[sphenofile, " BoundaryRenScale = "<>ToString[InputForm[$SPhenoBoundaryRenScale]]<>";\n\n\n"];
     
     WriteString[sphenofile, "BoundaryMatchingUV = {\n"];
+    replQ = ToString[#]<>"Q"->ToString[#]&/@Join[Gauge[[All,4]],{Yu,Yd,Ye}];
     For[i=1,i<=Length[SA`ListFuncCalls],
-    WriteString[sphenofile, "{"<>ToString[SA`ListFuncCalls[[i,1]]//InputForm] <>","<>StringReplace[SA`ListFuncCalls[[i,2]],{"Q,"->","}]<> "}"];
+    WriteString[sphenofile, "{"<>ToString[SA`ListFuncCalls[[i,1]]//InputForm] <>","<>StringReplace[SA`ListFuncCalls[[i,2]],replQ]<> "}"];
         If[i!=Length[SA`ListFuncCalls],
             WriteString[sphenofile,",\n"];,
             WriteString[sphenofile,"\n};\n\n"];

@@ -24,7 +24,8 @@ GetMassesAndRotationMatrices[tadpar_]:=Block[{i,j,eig,def,angles,ev},
 Print["Calculate Expressions for Masses and Rotation Matrices"];
 
 realVar=Join[realVar,Select[$ParametrisationUV,FreeQ[realVar,#[[1]]]==False && Head[#[[2]]]=!=Times&] /. Rule[a_,b_]:>b];
-realVar=Join[realVar,DeleteCases[Select[$AssumptionsMatching,Head[#]==Greater&] /. Greater[a_,0]:>a,x_Greater]];
+realVar=Join[realVar,
+Cases[$AssumptionsMatching,Greater[_,_Real|_Integer]|Less[_Real|_Integer,_]|Element[_,Reals]] /. Greater[a_,_Real|_Integer]:>a/.Less[_Real|_Integer,a_]:>a/.Element[a_,Reals]:>a];
 
 If[tadpar==={},
 TreeLevelTadpoleSolutions={};,
@@ -320,7 +321,7 @@ c=SA`MatchingResultsNLO[[i]];
 func=c[[2]];
 funcname="EFTcoupling"<>ToString[i];
 info=GenerateSelfDefinedFuntion[funcname,func,opts];
-funccall=funcname<>"["<>ListToString[Join[info["Arguments"],{mGUT}]]<>"]";
+funccall=funcname<>"["<>ListToString[info["Arguments"]]<>"]";
 SA`ListFuncCalls=Join[SA`ListFuncCalls,{{SA`MatchingResultsNLO[[i,1]],funccall}}];
 ComplexParameters=Union[ComplexParameters,info["ComplexParameters"]];
 RealParameters=Union[RealParameters,info["RealParameters"]];
