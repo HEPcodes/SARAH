@@ -380,7 +380,7 @@ SA`Doc`Info = "Returns the FeynArts number (=particle number) of a given particl
 SA`Doc`Input={"x"->"The considered particle"};
 SA`Doc`GenerateEntry[];
 
-pos = Position[partDefinition,x];
+pos = Position[partDefinition,x] // Cases[#, {_Integer, 1}] &;
 
 If[pos==={} ,
 Message[FeynArts::NoNumber,x];
