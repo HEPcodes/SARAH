@@ -1130,11 +1130,21 @@ SA`Doc`Return[{temp,temp3}];
 
 ];
 
-getLaTeXlength[exp_Times]:=Plus@@getLR/@Plus@@exp;
-getLaTeXlength[exp_Plus]:=Plus@@getLR/@exp;
-getLaTeXlength[exp_List]:=Plus@@getLR[Plus@@exp];
-getLaTeXlength[exp_Power]:=Plus@@getLR/@Plus@@exp;
-getLaTeXlength[exp_]:=Plus@@getLR[exp];
+getLaTeXlength[exp_] := Module[{orig, fixed},
+  orig = getLaTeXlength$[exp];
+  If[MatchQ[orig, Infinity | -Infinity | n_ /; NumericQ[n]], Return[orig]];
+
+  fixed = Cases[orig, n_/;NumericQ[n], -1] // Total;
+  fixed = If[NumberQ[fixed] && fixed > 0, fixed, 1, 1];
+  Print["Hitting getLaTeXlength bug; forcing " <> TextString[orig] <> " to " <> TextString[fixed]];
+  Return[fixed];
+]
+
+getLaTeXlength$[exp_Times]:=Total[getLR/@List@@exp];
+getLaTeXlength$[exp_Plus]:=Total[getLR/@List@@exp];
+getLaTeXlength$[exp_List]:=Plus@@getLR/@exp;
+getLaTeXlength$[exp_Power]:=Total[getLR/@ List@@exp];
+getLaTeXlength$[exp_]:=Plus@@getLR[exp];
 
 
 getLR[x_Plus]:=getLR/@x;
